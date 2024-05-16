@@ -25,7 +25,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        getComments()
         setContent {
             MobileprojTheme {
                 // A surface container using the 'background' color from the theme
@@ -34,40 +33,6 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Greeting("Android")
-                }
-            }
-        }
-    }
-}
-
-fun getComments() {
-    val mongodbURL = "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-wqzctuv/endpoint/getComments";
-    /*val url = URL(mongodbURL)
-    val urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
-    val inputStreamReader = InputStreamReader(urlConnection.inputStream)
-    val bufferedReader = BufferedReader(inputStreamReader)
-
-    val stringBuilder = StringBuilder()
-    var line:String?
-    while (bufferedReader.readLine().also { line = it } != null) {
-        stringBuilder.append(line)
-    }
-
-    val jsonArray = JSONArray(stringBuilder.toString())
-
-    println(jsonArray)*/
-    val url = URL(mongodbURL)
-    val executor = Executors.newSingleThreadExecutor()
-    executor.execute {
-        val stringBuilder = StringBuilder()
-        with(url.openConnection() as HttpURLConnection) {
-            requestMethod = "GET"  // optional default is GET
-
-            println("\nSent 'GET' request to URL : $url; Response Code : $responseCode")
-            inputStream.bufferedReader().use {
-                it.lines().forEach { line ->
-                    println(line)
-                    stringBuilder.append(line)
                 }
             }
         }
