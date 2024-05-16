@@ -45,7 +45,10 @@ class MainActivity : ComponentActivity() {
                     }
                     Scaffold(
                         topBar = { TopAppBar(navController, currentRoute) },
-                        bottomBar = { BottomAppBar(navController)}
+                        bottomBar = {
+                            if(currentRoute == Route.Home) {
+                                BottomAppBar(navController)}
+                            }
                     ) { contentPadding ->
                         NavGraph(navController, modifier = Modifier.padding(contentPadding))
                     }

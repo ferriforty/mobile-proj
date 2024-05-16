@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Warning
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,9 +33,9 @@ fun HomeScreen(navController: NavHostController) {
                 Icon(Icons.Outlined.Add, "Add Workout")
             }
         },
+        floatingActionButtonPosition = FabPosition.Center
     ) { contentPadding ->
         NoItemsPlaceholder(Modifier.padding(contentPadding))
-
     }
 }
 

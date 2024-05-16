@@ -2,6 +2,7 @@ package com.example.mobile_proj.ui.composables
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -45,11 +46,17 @@ fun TopAppBar(
                     Icon(Icons.Outlined.Search, contentDescription = "Search")
                 }
             }
-            if (currentRoute.route != Route.Settings.route) {
+            if (currentRoute.route == Route.Home.route) {
                 IconButton(onClick = { navController.navigate(Route.Settings.route) }) {
                     Icon(Icons.Outlined.Settings, "Settings")
                 }
             }
+            if (currentRoute.route == Route.Profile.route) {
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(Icons.Outlined.Edit, contentDescription = "Edit Profile")
+            }
+        }
+
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer

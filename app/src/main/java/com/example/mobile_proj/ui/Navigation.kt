@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.mobile_proj.ui.screens.home.HomeScreen
+import com.example.mobile_proj.ui.screens.profile.ProfileScreen
 import org.koin.androidx.compose.koinViewModel
 
 sealed class Route(
@@ -37,6 +38,12 @@ fun NavGraph(
         with(Route.Home) {
             composable(route) {
                 HomeScreen(navController)
+            }
+        }
+
+        with(Route.Profile) {
+            composable(route) {
+                ProfileScreen(navController)
             }
         }
     }
