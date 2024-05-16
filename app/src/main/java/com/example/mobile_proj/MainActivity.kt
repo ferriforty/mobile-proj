@@ -1,9 +1,6 @@
 package com.example.mobile_proj
 
-import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,17 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.mobile_proj.ui.theme.MobileprojTheme
-import org.json.JSONArray
-import java.io.BufferedReader
-import java.net.HttpURLConnection
-import java.net.URL
-import java.util.concurrent.Executors
+import io.realm.kotlin.mongodb.App
+import io.realm.kotlin.mongodb.Credentials
+import io.realm.kotlin.mongodb.ext.call
+import kotlinx.coroutines.runBlocking
+import org.mongodb.kbson.BsonArray
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         getComments()
         setContent {
             MobileprojTheme {
@@ -33,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    Greeting("ciao")
                 }
             }
         }
@@ -41,35 +37,20 @@ class MainActivity : ComponentActivity() {
 }
 
 fun getComments() {
-    val mongodbURL = "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-wqzctuv/endpoint/getComments";
-    /*val url = URL(mongodbURL)
-    val urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
-    val inputStreamReader = InputStreamReader(urlConnection.inputStream)
-    val bufferedReader = BufferedReader(inputStreamReader)
 
-    val stringBuilder = StringBuilder()
-    var line:String?
-    while (bufferedReader.readLine().also { line = it } != null) {
-        stringBuilder.append(line)
-    }
+    val app = App.create(BuildConfig.APP_ID) // Replace this with your App ID
+    runBlocking {
+        // Log in the user with the credentials associated
+        // with the authentication provider
+        // If successful, returns an authenticated `User` object
+        val credentials = Credentials.emailPassword(BuildConfig.EMAIL, BuildConfig.PASSWORD);
+        val user = app.login(credentials)
+        // ... work with the user ...
+        println(user)
 
-    val jsonArray = JSONArray(stringBuilder.toString())
-
-    println(jsonArray)*/
-    val url = URL(mongodbURL)
-    val executor = Executors.newSingleThreadExecutor()
-    executor.execute {
-        val stringBuilder = StringBuilder()
-        with(url.openConnection() as HttpURLConnection) {
-            requestMethod = "GET"  // optional default is GET
-
-            println("\nSent 'GET' request to URL : $url; Response Code : $responseCode")
-            inputStream.bufferedReader().use {
-                it.lines().forEach { line ->
-                    println(line)
-                    stringBuilder.append(line)
-                }
-            }
+        val c = user.functions.call<BsonArray>("getUsers", "")
+        for (x in c) {
+            println(x)
         }
     }
 }
