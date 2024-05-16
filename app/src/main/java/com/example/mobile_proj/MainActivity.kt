@@ -21,7 +21,6 @@ import org.mongodb.kbson.BsonArray
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getComments()
         setContent {
             MobileprojTheme {
                 // A surface container using the 'background' color from the theme
@@ -36,24 +35,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-fun getComments() {
-
-    val app = App.create(BuildConfig.APP_ID) // Replace this with your App ID
-    runBlocking {
-        // Log in the user with the credentials associated
-        // with the authentication provider
-        // If successful, returns an authenticated `User` object
-        val credentials = Credentials.emailPassword(BuildConfig.EMAIL, BuildConfig.PASSWORD);
-        val user = app.login(credentials)
-        // ... work with the user ...
-        println(user)
-
-        val c = user.functions.call<BsonArray>("getUsers", "")
-        for (x in c) {
-            println(x)
-        }
-    }
-}
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
