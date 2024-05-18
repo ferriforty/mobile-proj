@@ -82,4 +82,6 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("io.realm.kotlin:library-sync:1.16.0")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("io.insert-koin:koin-androidx-compose:3.5.3")
 }
