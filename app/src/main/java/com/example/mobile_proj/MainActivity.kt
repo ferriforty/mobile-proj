@@ -22,11 +22,25 @@ import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.composables.BottomAppBar
 import com.example.mobile_proj.ui.composables.TopAppBar
 import com.example.mobile_proj.ui.theme.MobileprojTheme
+import com.example.mobile_proj.database.Connection
+import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val db = Connection();
+        runBlocking {
+            println(db.insertUser(JSONObject("""{
+                "name":"giorgio", 
+                "surname":"garofalo",
+                "username":"gioGaf",
+                "password":"canePuzzolente",
+                "birthDate":"24-07-02",
+                "profileImage":""
+            }""".trimIndent()), this@MainActivity));
+        }
         setContent {
             MobileprojTheme {
                 // A surface container using the 'background' color from the theme
