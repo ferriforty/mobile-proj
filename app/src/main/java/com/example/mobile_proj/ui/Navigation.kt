@@ -11,6 +11,8 @@ import androidx.navigation.navArgument
 import com.example.mobile_proj.ui.screens.home.HomeScreen
 import com.example.mobile_proj.ui.screens.profile.ProfileScreen
 import com.example.mobile_proj.ui.screens.settings.SettingsScreen
+import com.example.mobile_proj.ui.screens.settings.ThemeState
+import com.example.mobile_proj.ui.screens.settings.ThemeViewModel
 import org.koin.androidx.compose.koinViewModel
 
 sealed class Route(
@@ -29,7 +31,9 @@ sealed class Route(
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    themeState: ThemeState,
+    themeViewModel: ThemeViewModel
 ) {
     NavHost(
         navController = navController,
@@ -48,7 +52,7 @@ fun NavGraph(
         }
         with(Route.Settings) {
             composable(route) {
-                SettingsScreen(navController)
+                SettingsScreen(navController, themeState, themeViewModel)
             }
         }
     }
