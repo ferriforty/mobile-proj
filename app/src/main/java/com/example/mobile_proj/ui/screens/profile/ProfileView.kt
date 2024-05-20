@@ -10,14 +10,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.mobile_proj.ui.Route
+import com.example.mobile_proj.ui.composables.TopAppBar
 
 @Composable
 fun ProfileScreen(navController: NavHostController) {
-    Scaffold { contentPadding ->
+    Scaffold (
+        topBar = { TopAppBar(navController, Route.Profile) }
+    ){ contentPadding ->
         Icon(Icons.Outlined.AccountCircle,
             "Profile Image",
-                Modifier.padding(contentPadding)
-                    .size(45.dp)
+            Modifier
+                .padding(contentPadding)
+                .size(45.dp)
         )
     }
 }
