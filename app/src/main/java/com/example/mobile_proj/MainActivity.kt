@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val themeViewModel = koinViewModel<ThemeViewModel>()
             val themeState by themeViewModel.state.collectAsStateWithLifecycle()
-            println("The theme state:"+themeState)
+
             MobileprojTheme(darkTheme = when (themeState.theme) {
                 Theme.Light -> false
                 Theme.Dark -> true
