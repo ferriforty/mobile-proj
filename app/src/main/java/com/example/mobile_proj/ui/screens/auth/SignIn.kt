@@ -3,6 +3,7 @@ package com.example.mobile_proj.ui.screens.auth
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.view.textclassifier.TextLinks.TextLink
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,12 +29,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mobile_proj.MainActivity
 import com.example.mobile_proj.database.Connection
+import com.example.mobile_proj.ui.RouteAuth
 
 @Composable
 fun SignIn(navController: NavHostController, db: Connection) {
 
     Surface {
-        var credentials by remember { mutableStateOf(Credentials()) }
+        var credentials by remember { mutableStateOf(CredentialsSignIn()) }
         val context = LocalContext.current
 
         Column(
@@ -51,7 +54,7 @@ fun SignIn(navController: NavHostController, db: Connection) {
                 value = credentials.pwd,
                 onChange = { data -> credentials = credentials.copy(pwd = data) },
                 submit = {
-                    if (!checkCredentials(credentials, context, db)) credentials = Credentials()
+                    checkCredentials(credentials, context, db)
                 },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -66,7 +69,7 @@ fun SignIn(navController: NavHostController, db: Connection) {
             Spacer(modifier = Modifier.height(20.dp))
             Button(
                 onClick = {
-                    if (!checkCredentials(credentials, context, db)) credentials = Credentials()
+                    checkCredentials(credentials, context, db)
                 },
                 enabled = credentials.isNotEmpty(),
                 shape = RoundedCornerShape(5.dp),
@@ -74,11 +77,20 @@ fun SignIn(navController: NavHostController, db: Connection) {
             ) {
                 Text("Login")
             }
+            Spacer(modifier = Modifier.height(30.dp))
+            TextButton(
+                onClick = {
+                    navController.navigate(RouteAuth.SignUpRoute.route)
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("New user? Sign Up")
+            }
         }
     }
 }
 
-data class Credentials(
+data class CredentialsSignIn(
     var username: String = "",
     var pwd: String = "",
     var remember: Boolean = false
@@ -88,13 +100,12 @@ data class Credentials(
     }
 }
 
-fun checkCredentials(creds: Credentials, context: Context, db: Connection): Boolean {
+private fun checkCredentials(creds: CredentialsSignIn, context: Context, db: Connection): Boolean {
     if (creds.isNotEmpty() && signInCheck(creds, db)) {
         context.startActivity(Intent(context, MainActivity::class.java))
         (context as Activity).finish()
         return true
-    } else {
-        Toast.makeText(context, "Wrong Credentials", Toast.LENGTH_SHORT).show()
-        return false
     }
+    Toast.makeText(context, "Wrong Credentials", Toast.LENGTH_SHORT).show()
+    return false
 }

@@ -181,7 +181,7 @@ class Connection(context: Context) {
      * @return [res] the uuid or and empty String (if keepSigned is false) if everything went well
      * and error message if not
      */
-    suspend fun signUP(
+    suspend fun signUp(
         arg: JSONObject,
         keepSigned: Boolean,
     ): JSONObject {
