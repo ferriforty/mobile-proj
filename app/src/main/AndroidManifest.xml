@@ -21,6 +21,12 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Mobileproj">
+        </activity>
+        <activity
+            android:name=".activities.Authentication"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Mobileproj">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
