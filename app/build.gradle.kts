@@ -84,4 +84,5 @@ dependencies {
     implementation("io.realm.kotlin:library-sync:1.16.0")
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("io.insert-koin:koin-androidx-compose:3.5.3")
+    implementation("androidx.security:security-crypto-ktx:1.1.0-alpha06")
 }

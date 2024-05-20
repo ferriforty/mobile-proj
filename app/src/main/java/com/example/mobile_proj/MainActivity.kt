@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.example.mobile_proj.ui.NavGraph
 import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.composables.BottomAppBar
@@ -30,17 +32,27 @@ import org.json.JSONObject
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val db = Connection();
+        val db = Connection(this);
         runBlocking {
-            println(db.insertUser(JSONObject("""{
+            println( db.userExists("ciao"));
+            println( db.userExists("aa"));
+            println(db.signUP(JSONObject("""{
                 "name":"giorgio", 
                 "surname":"garofalo",
-                "username":"gioGaf",
+                "username":"gioGafop",
                 "password":"canePuzzolente",
                 "birthDate":"24-07-02",
                 "profileImage":""
-            }""".trimIndent()), this@MainActivity));
+            }""".trimIndent()), true));
+            println(
+                db.signIn("gioGafop", "canePuzzolente", true)
+            )
+            val sharedPref = db.retrieveFromSharedPreference()
+            println(
+                db.signInToken(sharedPref.first, sharedPref.second)
+            )
         }
+
         setContent {
             MobileprojTheme {
                 // A surface container using the 'background' color from the theme
