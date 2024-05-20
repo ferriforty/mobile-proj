@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -6,6 +8,7 @@ plugins {
 android {
     namespace = "com.example.mobile_proj"
     compileSdk = 34
+    android.buildFeatures.buildConfig = true
 
     defaultConfig {
         applicationId = "com.example.mobile_proj"
@@ -18,6 +21,17 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        val keystoreFile = project.rootProject.file("local.properties")
+        val properties = Properties()
+        properties.load(keystoreFile.inputStream())
+
+        val appId = properties.getProperty("APP_ID") ?: ""
+        val email = properties.getProperty("EMAIL") ?: ""
+        val password = properties.getProperty("PASSWORD") ?: ""
+
+        buildConfigField( type = "String", name = "APP_ID", value = appId )
+        buildConfigField( type = "String", name = "EMAIL", value = email )
+        buildConfigField( type = "String", name = "PASSWORD", value = password )
     }
 
     buildTypes {
@@ -38,6 +52,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -66,6 +81,8 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation("io.realm.kotlin:library-sync:1.16.0")
+    implementation("androidx.security:security-crypto-ktx:1.1.0-alpha06")
 
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
