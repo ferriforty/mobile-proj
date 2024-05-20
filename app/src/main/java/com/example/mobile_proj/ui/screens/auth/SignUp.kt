@@ -18,7 +18,7 @@ import com.example.mobile_proj.ui.composables.TopAppBar
 @Composable
 fun SignUp(navController: NavHostController, db: Connection) {
     Scaffold (
-        topBar = { TopAppBar(navController, RouteAuth.SignUp) }
+        topBar = { TopAppBar(navController, RouteAuth.SignUpRoute) }
     ){ contentPadding ->
         Icon(Icons.Outlined.AccountCircle,
             "Profile Image",

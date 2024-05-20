@@ -121,7 +121,6 @@ class Connection(context: Context) {
             return res
         }
         if (keepSigned) {
-            println(res)
             insertSharedPreference(username, res["access_token"].toString())
         }
         return res

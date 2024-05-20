@@ -33,6 +33,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.mobile_proj.data.models.Theme
+import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.NavGraph
 import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.composables.BottomAppBar

@@ -11,3 +11,11 @@ fun signInCheck(credentials: Credentials, db: Connection): Boolean {
     }
     return JSONObject(res["code"].toString())["\$numberLong"] == "200"
 }
+
+fun signInCheckWithToken(username: String, authToken: String, db: Connection): Boolean {
+    var res: JSONObject
+    runBlocking {
+        res = db.signInToken(username, authToken)
+    }
+    return JSONObject(res["code"].toString())["\$numberLong"] == "200"
+}

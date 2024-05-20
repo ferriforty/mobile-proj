@@ -1,10 +1,7 @@
 package com.example.mobile_proj.activities
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -21,8 +18,8 @@ import com.example.mobile_proj.MainActivity
 import com.example.mobile_proj.data.models.Theme
 import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.NavGraphAuth
-import com.example.mobile_proj.ui.screens.auth.SignIn
-import com.example.mobile_proj.ui.screens.home.HomeScreen
+import com.example.mobile_proj.ui.RouteAuth
+import com.example.mobile_proj.ui.screens.auth.signInCheckWithToken
 import com.example.mobile_proj.ui.screens.settings.ThemeViewModel
 import com.example.mobile_proj.ui.theme.MobileprojTheme
 import org.koin.androidx.compose.koinViewModel
@@ -31,6 +28,16 @@ class Authentication : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val db = Connection(this);
+
+        val autoLogCred = db.retrieveFromSharedPreference()
+        println(autoLogCred)
+
+        if (autoLogCred.first.isNotEmpty() && autoLogCred.second.isNotEmpty()) {
+            if (signInCheckWithToken(autoLogCred.first, autoLogCred.second, db)) {
+                this.startActivity(Intent(this, MainActivity::class.java))
+            }
+        }
+
         setContent {
             val themeViewModel = koinViewModel<ThemeViewModel>()
             val themeState by themeViewModel.state.collectAsStateWithLifecycle()
@@ -50,7 +57,7 @@ class Authentication : ComponentActivity() {
                     Scaffold { contentPadding ->
                         NavGraphAuth(navController, modifier = Modifier.padding(contentPadding), db)
                     }
-                    SignIn(navController, db)
+                    RouteAuth.SignInRoute
                 }
             }
         }

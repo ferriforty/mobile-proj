@@ -13,11 +13,11 @@ sealed class RouteAuth(
     val route: String,
     val title: String,
 ) {
-    data object SignIn : Route("signIn", "Sign In")
-    data object SignUp : Route("signUp", "Sign Up")
+    data object SignInRoute : Route("signIn", "Sign In")
+    data object SignUpRoute : Route("signUp", "Sign Up")
 
     companion object {
-        val routes = setOf(SignIn, SignUp)
+        val routes = setOf(SignInRoute, SignUpRoute)
     }
 }
 
@@ -29,15 +29,15 @@ fun NavGraphAuth(
 ) {
     NavHost(
         navController = navController,
-        startDestination = RouteAuth.SignIn.route,
+        startDestination = RouteAuth.SignInRoute.route,
         modifier = modifier
     ) {
-        with(RouteAuth.SignIn) {
+        with(RouteAuth.SignInRoute) {
             composable(route) {
                 SignIn(navController, db)
             }
         }
-        with(RouteAuth.SignUp) {
+        with(RouteAuth.SignUpRoute) {
             composable(route) {
                 SignUp(navController, db)
             }
