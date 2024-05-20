@@ -1,10 +1,12 @@
 package com.example.mobile_proj.ui
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.screens.home.HomeScreen
 import com.example.mobile_proj.ui.screens.profile.ProfileScreen
 import com.example.mobile_proj.ui.screens.settings.SettingsScreen
@@ -29,7 +31,9 @@ fun NavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     themeState: ThemeState,
-    themeViewModel: ThemeViewModel
+    themeViewModel: ThemeViewModel,
+    db: Connection,
+    context: Context
 ) {
     NavHost(
         navController = navController,
@@ -48,7 +52,7 @@ fun NavGraph(
         }
         with(Route.Settings) {
             composable(route) {
-                SettingsScreen(navController, themeState, themeViewModel)
+                SettingsScreen(navController, themeState, themeViewModel, db, context)
             }
         }
     }

@@ -47,6 +47,9 @@ import org.koin.androidx.compose.koinViewModel
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val db = Connection(this)
+
         setContent {
             val themeViewModel = koinViewModel<ThemeViewModel>()
             val themeState by themeViewModel.state.collectAsStateWithLifecycle()
@@ -71,7 +74,14 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     Scaffold { contentPadding ->
-                        NavGraph(navController, modifier = Modifier.padding(contentPadding), themeState, themeViewModel)
+                        NavGraph(
+                            navController,
+                            modifier = Modifier.padding(contentPadding),
+                            themeState,
+                            themeViewModel,
+                            db,
+                            this
+                        )
                     }
                     if(currentRoute == Route.Home) {
                         HomeScreen(navController)

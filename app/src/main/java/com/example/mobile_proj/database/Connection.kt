@@ -82,6 +82,19 @@ class Connection(context: Context) {
     }
 
     /**
+     * function to reset username and access token from shared preference
+     */
+    fun deleteSharedPreference() {
+        sharedPreferences.edit()
+            .putString("username", "")
+            .apply()
+
+        sharedPreferences.edit()
+            .putString("access_token", "")
+            .apply()
+    }
+
+    /**
      * method to check if a user exists
      *
      * @param username email of the user

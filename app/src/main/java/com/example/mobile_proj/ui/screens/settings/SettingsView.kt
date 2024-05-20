@@ -1,5 +1,6 @@
 package com.example.mobile_proj.ui.screens.settings
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,8 +15,10 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.ExitToApp
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
@@ -30,20 +33,39 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mobile_proj.R
 import com.example.mobile_proj.data.models.Theme
+import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.composables.TopAppBar
 
 @Composable
-fun SettingsScreen(navController: NavHostController, themeState: ThemeState, themeViewModel: ThemeViewModel) {
+fun SettingsScreen(
+    navController: NavHostController,
+    themeState: ThemeState,
+    themeViewModel: ThemeViewModel,
+    db: Connection,
+    context: Context
+) {
     Column {
         TopAppBar(navController, Route.Settings)
         ThemeChangeRow(themeState, themeViewModel::changeTheme)
-        SettingsRow(Icons.Outlined.AccountCircle, "Log Out", Icons.Outlined.ExitToApp)
+        SettingsRow(
+            Icons.Outlined.AccountCircle,
+            "Log Out",
+            Icons.Outlined.ExitToApp,
+            db,
+            context
+        )
     }
 }
 
 @Composable
-fun SettingsRow(imageVector: ImageVector, contentDescription: String, imageVector2: ImageVector) {
+fun SettingsRow(
+    imageVector: ImageVector,
+    contentDescription: String,
+    imageVector2: ImageVector,
+    db: Connection,
+    context: Context
+) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -64,10 +86,12 @@ fun SettingsRow(imageVector: ImageVector, contentDescription: String, imageVecto
                     Text(contentDescription)
                 }
                 Spacer(modifier = Modifier.weight(1.0f))
-                Icon(imageVector2,
-                    contentDescription,
-                    Modifier.size(45.dp)
-                )
+                IconButton(onClick = { logOut(db, context) }) {
+                    Icon(imageVector2,
+                        contentDescription,
+                        Modifier.size(45.dp)
+                    )
+                }
             }
             Divider(
                 modifier = Modifier.padding(5.dp)
