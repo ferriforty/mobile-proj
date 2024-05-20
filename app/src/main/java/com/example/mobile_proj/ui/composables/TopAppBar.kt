@@ -52,7 +52,7 @@ fun TopAppBar(
                 }
             }
             if (currentRoute.route == Route.Profile.route) {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { navController.navigate(Route.EditProfile.route) }) {
                 Icon(Icons.Outlined.Edit, contentDescription = "Edit Profile")
             }
         }
