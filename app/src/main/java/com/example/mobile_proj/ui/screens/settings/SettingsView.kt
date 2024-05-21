@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.ExitToApp
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -33,6 +34,7 @@ import com.example.mobile_proj.data.models.Theme
 import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.composables.TopAppBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavHostController, themeState: ThemeState, themeViewModel: ThemeViewModel) {
     Column {
