@@ -3,7 +3,9 @@ package com.example.mobile_proj.ui.screens.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -34,7 +36,7 @@ import com.example.mobile_proj.ui.composables.TopAppBarHome
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavHostController) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar ={ TopAppBarHome(navController, Route.Home, scrollBehavior) },
@@ -56,9 +58,9 @@ fun HomeScreen(navController: NavHostController) {
                 BottomAppBar(navController)
         }
     ) { contentPadding ->
-           NoItemsPlaceholder(modifier = Modifier
-               .padding(contentPadding)
-           )
+       NoItemsPlaceholder(modifier = Modifier
+           .padding(contentPadding)
+       )
     }
 }
 
@@ -71,6 +73,11 @@ fun NoItemsPlaceholder(modifier: Modifier = Modifier) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
+        Spacer(
+            Modifier
+                .padding(4.dp)
+                .height(70.dp)
+        )
         Icon(
             Icons.Outlined.Warning, "Warning",
             modifier = Modifier
