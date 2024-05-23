@@ -25,7 +25,7 @@ import com.example.mobile_proj.ui.composables.TopAppBar
 @Composable
 fun ProfileScreen(navController: NavHostController) {
     Scaffold (
-        topBar = { TopAppBar(navController, Route.Profile) },
+        topBar = { TopAppBar(navController, Route.Profile, null) },
         content = { contentPadding ->
             Column(
                 modifier = Modifier

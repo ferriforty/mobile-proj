@@ -44,7 +44,7 @@ fun EditProfileScreen(navController: NavHostController) {
         }
     }
     Scaffold (
-        topBar = { TopAppBar(navController, Route.EditProfile) },
+        topBar = { TopAppBar(navController, Route.EditProfile, null) },
         content = { contentPadding ->
             Column(
                 modifier = Modifier

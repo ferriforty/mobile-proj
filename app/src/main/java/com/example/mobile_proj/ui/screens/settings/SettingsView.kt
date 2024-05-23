@@ -38,7 +38,7 @@ import com.example.mobile_proj.ui.composables.TopAppBar
 @Composable
 fun SettingsScreen(navController: NavHostController, themeState: ThemeState, themeViewModel: ThemeViewModel) {
     Column {
-        TopAppBar(navController, Route.Settings)
+        TopAppBar(navController, Route.Settings, null)
         ThemeChangeRow(themeState, themeViewModel::changeTheme)
         SettingsRow(Icons.Outlined.AccountCircle, "Log Out", Icons.Outlined.ExitToApp)
     }

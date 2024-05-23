@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.composables.BottomAppBar
-import com.example.mobile_proj.ui.composables.TopAppBarHome
+import com.example.mobile_proj.ui.composables.TopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,7 +39,7 @@ fun HomeScreen(navController: NavHostController) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar ={ TopAppBarHome(navController, Route.Home, scrollBehavior) },
+        topBar ={ TopAppBar(navController, Route.Home, scrollBehavior) },
         floatingActionButton = {
             Box {
                 FloatingActionButton(
