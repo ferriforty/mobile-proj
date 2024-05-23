@@ -1,7 +1,10 @@
 package com.example.mobile_proj.ui.screens.auth
 
 import com.example.mobile_proj.database.Connection
+import com.google.gson.Gson
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
 import org.json.JSONObject
 
 fun signInCheck(credentials: CredentialsSignIn, db: Connection): Boolean {
@@ -22,17 +25,15 @@ fun signInCheckWithToken(username: String, authToken: String, db: Connection): B
 
 fun signUpCheck(credentials: CredentialsSignUp, db: Connection): Boolean {
     var res: JSONObject
+    val creds = JSONObject(Gson().toJson(credentials))
     runBlocking {
-        res = db.signUp(JSONObject(
-            """
-                {"name": ${credentials.name}},
-                {"surname": ${credentials.surname}},
-                {"username": ${credentials.username}},
-                {"password": ${credentials.pwd}},
-                {"birthDate": ${credentials.date}},
-                {"profileImage": ${credentials.profileImage}},
-            """.trimIndent()),
-            credentials.remember)
+        res = db.signUp(creds)
     }
     return JSONObject(res["code"].toString())["\$numberLong"] == "200"
+}
+
+fun userExists(username: String, db: Connection): Boolean {
+    return runBlocking {
+        return@runBlocking db.userExists(username)
+    }
 }

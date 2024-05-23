@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -48,7 +50,9 @@ fun SignIn(navController: NavHostController, db: Connection) {
             LoginField(
                 value = credentials.username,
                 onChange = { data -> credentials = credentials.copy(username = data) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                label = "Username",
+                placeholder = "Enter your username",
             )
             PasswordField(
                 value = credentials.pwd,
@@ -75,7 +79,7 @@ fun SignIn(navController: NavHostController, db: Connection) {
                 shape = RoundedCornerShape(5.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Login")
+                Text("Sign In")
             }
             Spacer(modifier = Modifier.height(30.dp))
             TextButton(

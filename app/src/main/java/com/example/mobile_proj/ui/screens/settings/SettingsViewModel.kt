@@ -1,5 +1,6 @@
 package com.example.mobile_proj.ui.screens.settings
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.ViewModel
@@ -32,4 +33,5 @@ class ThemeViewModel(
 fun logOut(db: Connection, context: Context) {
     db.deleteSharedPreference()
     context.startActivity(Intent(context, Authentication::class.java))
+    (context as Activity).finish()
 }

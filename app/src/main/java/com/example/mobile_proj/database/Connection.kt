@@ -11,6 +11,8 @@ import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import io.realm.kotlin.mongodb.exceptions.ConnectionException
+import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
 import org.mongodb.kbson.BsonDocument
 import org.mongodb.kbson.serialization.EJson
 
@@ -41,13 +43,30 @@ private fun createSharedPreference(context: Context): SharedPreferences {
  */
 class Connection(context: Context) {
     private val app: App = App.create(BuildConfig.APP_ID)
-    private var user: User
+    private lateinit var user: User
     private var sharedPreferences: SharedPreferences
 
     init {
         runBlocking {
             val credentials = Credentials.emailPassword(BuildConfig.EMAIL, BuildConfig.PASSWORD)
-            user = app.login(credentials)
+
+            runCatching {
+                app.login(credentials)
+            }.onFailure { ex: Throwable ->
+                when (ex) {
+                    is InvalidCredentialsException -> {
+
+                    }
+                    is ConnectionException -> {
+
+                    }
+                    else -> {
+                    }
+                }
+            }.onSuccess {
+                user = it
+            }
+
             sharedPreferences = createSharedPreference(context)
         }
     }
@@ -173,31 +192,28 @@ class Connection(context: Context) {
      *         "surname": string,
      *         "username": string,
      *         "password": string,
-     *         "birthDate": string,
-     *         "profileImage": byteArray
-     * @param keepSigned boolean flag that stores in sharedPreference a token if the user wants
-     * to auto log in when opening the application
+     *         "birthDate": long,
+     *         "remember": bool
      *
      * @return [res] the uuid or and empty String (if keepSigned is false) if everything went well
      * and error message if not
      */
     suspend fun signUp(
         arg: JSONObject,
-        keepSigned: Boolean,
     ): JSONObject {
 
         arg.put("password", generateHash(arg.get("password").toString()))
         val res = JSONObject(
             user
                 .functions
-                .call<BsonDocument>("insert_user_gymShred", arg.toString(), keepSigned)
+                .call<BsonDocument>("insert_user_gymShred", arg.toString())
                 .toJson()
         )
 
         if (JSONObject(res["code"].toString())["\$numberLong"] == "400") {
             return res
         }
-        if (keepSigned) {
+        if (arg["remember"] as Boolean) {
             insertSharedPreference(arg["username"].toString(), res["access_token"].toString())
         }
         return res
