@@ -1,7 +1,17 @@
 package com.example.mobile_proj.database
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.mobile_proj.BuildConfig
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.Credentials
@@ -11,6 +21,8 @@ import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.example.mobile_proj.MainActivity
+import com.example.mobile_proj.activities.ConnectionError
 import io.realm.kotlin.mongodb.exceptions.ConnectionException
 import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
 import org.mongodb.kbson.BsonDocument
@@ -45,24 +57,18 @@ class Connection(context: Context) {
     private val app: App = App.create(BuildConfig.APP_ID)
     private lateinit var user: User
     private var sharedPreferences: SharedPreferences
+    private var context: Context
 
     init {
+        this.context = context
         runBlocking {
             val credentials = Credentials.emailPassword(BuildConfig.EMAIL, BuildConfig.PASSWORD)
 
             runCatching {
                 app.login(credentials)
-            }.onFailure { ex: Throwable ->
-                when (ex) {
-                    is InvalidCredentialsException -> {
-
-                    }
-                    is ConnectionException -> {
-
-                    }
-                    else -> {
-                    }
-                }
+            }.onFailure {
+                context.startActivity(Intent(context, ConnectionError::class.java))
+                (context as Activity).finish()
             }.onSuccess {
                 user = it
             }
@@ -122,7 +128,15 @@ class Connection(context: Context) {
      */
     suspend fun userExists(username: String): Boolean {
 
-        return user.functions.call<Boolean>("user_exists", username)
+        runCatching {
+            user.functions.call<Boolean>("user_exists", username)
+        }.onFailure {
+            context.startActivity(Intent(context, ConnectionError::class.java))
+            (context as Activity).finish()
+        }.onSuccess {
+            return it
+        }
+        return false
     }
 
     /**

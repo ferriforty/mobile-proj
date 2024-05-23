@@ -1,5 +1,6 @@
 package com.example.mobile_proj.activities
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -30,11 +31,11 @@ class Authentication : ComponentActivity() {
         val db = Connection(this);
 
         val autoLogCred = db.retrieveFromSharedPreference()
-        println(autoLogCred)
 
         if (autoLogCred.first.isNotEmpty() && autoLogCred.second.isNotEmpty()) {
             if (signInCheckWithToken(autoLogCred.first, autoLogCred.second, db)) {
                 this.startActivity(Intent(this, MainActivity::class.java))
+                (this as Activity).finish()
             }
         }
 

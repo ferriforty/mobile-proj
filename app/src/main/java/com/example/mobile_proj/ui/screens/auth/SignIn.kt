@@ -62,7 +62,7 @@ fun SignIn(navController: NavHostController, db: Connection) {
                 },
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer( modifier = Modifier.height(10.dp) )
             LabeledCheckbox(
                 label = "Remember Me",
                 onCheckChanged = {
@@ -70,7 +70,7 @@ fun SignIn(navController: NavHostController, db: Connection) {
                 },
                 isChecked = credentials.remember
             )
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer( modifier = Modifier.height(20.dp) )
             Button(
                 onClick = {
                     checkCredentials(credentials, context, db)

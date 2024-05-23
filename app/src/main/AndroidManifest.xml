@@ -23,6 +23,12 @@
             android:theme="@style/Theme.Mobileproj">
         </activity>
         <activity
+            android:name=".activities.ConnectionError"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Mobileproj">
+        </activity>
+        <activity
             android:name=".activities.Authentication"
             android:exported="true"
             android:label="@string/app_name"

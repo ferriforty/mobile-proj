@@ -16,6 +16,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -52,7 +53,7 @@ fun LoginField(
         )
     }
 
-    TextField(
+    OutlinedTextField(
         value = value,
         onValueChange = onChange,
         modifier = modifier,
@@ -98,7 +99,7 @@ fun PasswordField(
     }
 
 
-    TextField(
+    OutlinedTextField(
         value = value,
         onValueChange = onChange,
         modifier = modifier,
