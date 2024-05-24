@@ -65,6 +65,7 @@ fun NavGraph(
                 val editProfileVm = koinViewModel<EditProfileViewModel>()
                 val state by editProfileVm.state.collectAsStateWithLifecycle()
                 EditProfileScreen(
+                    profileState = profileState,
                     state = state,
                     actions = editProfileVm.actions,
                     onSubmit = { profileVm.addProfile(state.toProfile()) },

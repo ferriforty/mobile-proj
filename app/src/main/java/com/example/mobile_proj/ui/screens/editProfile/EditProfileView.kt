@@ -1,6 +1,7 @@
 package com.example.mobile_proj.ui.screens.editProfile
 
 import android.Manifest
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,15 +29,18 @@ import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.composables.ProfileImageHolder
 import com.example.mobile_proj.ui.composables.Size
 import com.example.mobile_proj.ui.composables.TopAppBar
+import com.example.mobile_proj.ui.screens.profile.ProfileState
 import com.example.mobile_proj.utils.rememberCameraLauncher
 import com.example.mobile_proj.utils.rememberPermission
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditProfileScreen(state: EditProfileState,
-                      actions: EditProfileActions,
-                      onSubmit: () -> Unit,
-                      navController: NavHostController
+fun EditProfileScreen(
+    profileState: ProfileState,
+    state: EditProfileState,
+    actions: EditProfileActions,
+    onSubmit: () -> Unit,
+    navController: NavHostController
 ) {
     val ctx = LocalContext.current
 
@@ -69,7 +73,12 @@ fun EditProfileScreen(state: EditProfileState,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row {
-                ProfileImageHolder(uri = state.imageUri, size = Size.Sm)
+                if (profileState.profile.isNotEmpty()) {
+                    val imageUri = Uri.parse(profileState.profile[0].imageUri)
+                    ProfileImageHolder(imageUri, Size.Lg)
+                } else {
+                    ProfileImageHolder(null, Size.Lg)
+                }
             }
             IconButton(onClick = ::takePicture) {
                 Icon(
@@ -83,11 +92,18 @@ fun EditProfileScreen(state: EditProfileState,
             OutlinedTextField(
                 value = state.username,
                 onValueChange = actions::setUsername,
-                label = { Text("Username") },
+                label = { Text("Change username") },
                 modifier = Modifier.fillMaxWidth()
             )
-            Button(onClick = { onSubmit() }) {
-
+            Button(onClick = {
+                if (state.canSubmit) {
+                    onSubmit()
+                    navController.navigateUp()
+                } else {
+                    Toast.makeText(ctx, "Nothing changed", Toast.LENGTH_SHORT).show()
+                }
+            }) {
+                Text(text = "Submit")
             }
         }
     }

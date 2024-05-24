@@ -37,8 +37,7 @@ fun ProfileScreen(state: ProfileState,
                     Row {
                         val imageUri = Uri.parse(state.profile[0].imageUri)
                         ProfileImageHolder(imageUri, Size.Lg)
-                        //ProfileImageHolder(uri = state.profile[0].imageUri?.toUri(), size = Size.Lg )
-                        Text("Name: MarioIlGrosso",
+                        Text("Username: " +state.profile[0].username,
                             modifier = Modifier.padding(top = 20.dp))
                     }
                     Divider(modifier = Modifier.padding(5.dp))
