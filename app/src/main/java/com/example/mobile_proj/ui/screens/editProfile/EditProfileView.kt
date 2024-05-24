@@ -40,7 +40,9 @@ fun EditProfileScreen(state: EditProfileState,
 ) {
     val ctx = LocalContext.current
 
-    val cameraLauncher = rememberCameraLauncher()
+    val cameraLauncher = rememberCameraLauncher { imageUri ->
+        actions.setImageUri(imageUri)
+    }
 
     val cameraPermission = rememberPermission(Manifest.permission.CAMERA) { status ->
         if (status.isGranted) {
@@ -56,35 +58,37 @@ fun EditProfileScreen(state: EditProfileState,
         } else {
             cameraPermission.launchPermissionRequest()
         }
+
     Scaffold (
-        topBar = { TopAppBar(navController, Route.EditProfile, null) },
-        content = { contentPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(contentPadding),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row {
-                    ProfileImageHolder(uri = state.imageUri , size = Size.Lg )
-                }
-                IconButton(onClick = ::takePicture) {
-                    Icon(painter = painterResource(id = R.drawable.ic_photo_camera),
-                        "take-picture",
-                        modifier = Modifier.size(64.dp))
-                }
-                Text("Take a picture")
-                Divider(modifier = Modifier.padding(5.dp))
-                OutlinedTextField(
-                    value = state.username,
-                    onValueChange = actions::setUsername,
-                    label = { Text("Username") },
-                    modifier = Modifier.fillMaxWidth()
+        topBar = { TopAppBar(navController, Route.EditProfile, null) }
+    ) { contentPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row {
+                ProfileImageHolder(uri = state.imageUri, size = Size.Sm)
+            }
+            IconButton(onClick = ::takePicture) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_photo_camera),
+                    "take-picture",
+                    modifier = Modifier.size(64.dp)
                 )
-                Button(onClick = {onSubmit()}) {
-                    
-                }
+            }
+            Text("Take a picture")
+            Divider(modifier = Modifier.padding(5.dp))
+            OutlinedTextField(
+                value = state.username,
+                onValueChange = actions::setUsername,
+                label = { Text("Username") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Button(onClick = { onSubmit() }) {
+
             }
         }
-    )
+    }
 }

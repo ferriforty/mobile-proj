@@ -17,7 +17,7 @@ class ProfileRepository(
             val imageUri = saveImageToStorage(
                 Uri.parse(profile.imageUri),
                 contentResolver,
-                "Profile"
+                "Profile-img"
             )
             profileDAO.upsert(profile.copy(imageUri = imageUri.toString()))
         } else {

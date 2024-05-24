@@ -22,7 +22,9 @@ val appModule = module {
             get(),
             ProfileDatabase::class.java,
             "profile"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     single { ThemeRepository(get()) }

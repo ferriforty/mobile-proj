@@ -12,6 +12,7 @@ data class EditProfileState(
     val imageUri: Uri = Uri.EMPTY
 ) {
     fun toProfile() = Profile(
+        id = 1,
         username = username,
         imageUri = imageUri.toString()
     )
@@ -28,7 +29,7 @@ class EditProfileViewModel : ViewModel() {
 
     val actions = object : EditProfileActions {
         override fun setUsername(username: String) =
-            _state.update { it.copy() }
+            _state.update { it.copy(username = username) }
 
         override fun setImageUri(imageUri: Uri) =
             _state.update { it.copy(imageUri = imageUri) }

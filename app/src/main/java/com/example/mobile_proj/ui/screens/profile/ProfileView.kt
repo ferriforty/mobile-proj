@@ -1,5 +1,6 @@
 package com.example.mobile_proj.ui.screens.profile
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.composables.ProfileImageHolder
@@ -22,7 +22,7 @@ import com.example.mobile_proj.ui.composables.TopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(profileState: ProfileState,
+fun ProfileScreen(state: ProfileState,
                   navController: NavHostController) {
     Scaffold (
         topBar = { TopAppBar(navController, Route.Profile, null) },
@@ -33,12 +33,16 @@ fun ProfileScreen(profileState: ProfileState,
                     .padding(contentPadding),
                 horizontalAlignment = Alignment.Start
             ) {
-                Row {
-                    ProfileImageHolder(uri = profileState.profile[0].imageUri?.toUri(), size = Size.Lg )
-                    Text("Name: MarioIlGrosso",
-                        modifier = Modifier.padding(top = 20.dp))
+                if (state.profile.isNotEmpty()) {
+                    Row {
+                        val imageUri = Uri.parse(state.profile[0].imageUri)
+                        ProfileImageHolder(imageUri, Size.Lg)
+                        //ProfileImageHolder(uri = state.profile[0].imageUri?.toUri(), size = Size.Lg )
+                        Text("Name: MarioIlGrosso",
+                            modifier = Modifier.padding(top = 20.dp))
+                    }
+                    Divider(modifier = Modifier.padding(5.dp))
                 }
-                Divider(modifier = Modifier.padding(5.dp))
             }
         }
     )

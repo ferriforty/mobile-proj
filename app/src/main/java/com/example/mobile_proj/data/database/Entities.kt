@@ -6,7 +6,10 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Profile(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+
+    @ColumnInfo
     val username: String,
 
     @ColumnInfo
