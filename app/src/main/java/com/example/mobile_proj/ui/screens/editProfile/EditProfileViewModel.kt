@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.update
 
 data class EditProfileState(
     val username: String = "",
-    val imageUri: Uri = Uri.EMPTY
+    val imageUri: Uri =  Uri.EMPTY
 ) {
     val canSubmit get() = username.isNotBlank()
     fun toProfile() = Profile(

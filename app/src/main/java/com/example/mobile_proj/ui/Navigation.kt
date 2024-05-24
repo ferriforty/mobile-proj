@@ -7,6 +7,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutScreen
 import com.example.mobile_proj.ui.screens.editProfile.EditProfileScreen
 import com.example.mobile_proj.ui.screens.editProfile.EditProfileViewModel
 import com.example.mobile_proj.ui.screens.home.HomeScreen
@@ -25,9 +26,10 @@ sealed class Route(
     data object Profile : Route("profile", "My Profile")
     data object Settings : Route("settings", "Settings")
     data object EditProfile : Route("edit-profile", "Edit Profile")
+    data object AddWorkout : Route("add-workout", "New Workout")
 
     companion object {
-        val routes = setOf(Home, Profile, Settings, EditProfile)
+        val routes = setOf(Home, Profile, Settings, EditProfile, AddWorkout)
     }
 }
 
@@ -70,6 +72,13 @@ fun NavGraph(
                     actions = editProfileVm.actions,
                     onSubmit = { profileVm.addProfile(state.toProfile()) },
                     navController
+                )
+            }
+        }
+        with(Route.AddWorkout) {
+            composable(route) {
+                AddWorkoutScreen(
+                    navController = navController
                 )
             }
         }

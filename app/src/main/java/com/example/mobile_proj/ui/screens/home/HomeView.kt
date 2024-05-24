@@ -43,7 +43,7 @@ fun HomeScreen(navController: NavHostController) {
         floatingActionButton = {
             Box {
                 FloatingActionButton(
-                    onClick = { /* stub */ },
+                    onClick = { navController.navigate(Route.AddWorkout.route)},
                     modifier = Modifier
                         .align(Alignment.Center)
                         .size(60.dp)
