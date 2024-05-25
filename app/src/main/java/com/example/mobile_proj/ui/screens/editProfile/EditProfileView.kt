@@ -5,6 +5,7 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -72,6 +73,7 @@ fun EditProfileScreen(
                 .padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.padding(12.dp))
             Row {
                 if (profileState.profile.isNotEmpty()) {
                     val imageUri = Uri.parse(profileState.profile[0].imageUri)
@@ -88,12 +90,12 @@ fun EditProfileScreen(
                 )
             }
             Text("Take a picture")
-            Divider(modifier = Modifier.padding(5.dp))
+            Divider(modifier = Modifier.padding(10.dp))
             OutlinedTextField(
                 value = state.username,
                 onValueChange = actions::setUsername,
                 label = { Text("Change username") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(5.dp)
             )
             Button(onClick = {
                 if (state.canSubmit) {

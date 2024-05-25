@@ -21,7 +21,7 @@ class ProfileRepository(
             )
             profileDAO.upsert(profile.copy(imageUri = imageUri.toString()))
         } else {
-            profileDAO.upsert(profile)
+            profileDAO.setUsername(profile.id, profile.username)
         }
     }
 

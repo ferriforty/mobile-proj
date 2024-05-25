@@ -3,6 +3,7 @@ package com.example.mobile_proj.ui.screens.profile
 import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
@@ -34,13 +35,14 @@ fun ProfileScreen(state: ProfileState,
                 horizontalAlignment = Alignment.Start
             ) {
                 if (state.profile.isNotEmpty()) {
+                    Spacer(modifier = Modifier.padding(12.dp))
                     Row {
                         val imageUri = Uri.parse(state.profile[0].imageUri)
                         ProfileImageHolder(imageUri, Size.Lg)
                         Text("Username: " +state.profile[0].username,
-                            modifier = Modifier.padding(top = 20.dp))
+                            modifier = Modifier.padding(20.dp))
                     }
-                    Divider(modifier = Modifier.padding(5.dp))
+                    Divider(modifier = Modifier.padding(10.dp))
                 }
             }
         }

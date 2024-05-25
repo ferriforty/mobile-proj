@@ -30,7 +30,7 @@ fun ProfileImageHolder(uri: Uri?, size: Size) {
                 .crossfade(true)
                 .build(),
             "Profile picture",
-            contentScale = ContentScale.Fit,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(if (size == Size.Sm) 72.dp else 128.dp)
                 .clip(CircleShape)
