@@ -22,7 +22,7 @@ sealed class Route(
     val route: String,
     val title: String,
 ) {
-    data object Home : Route("travels", "Gym Shred")
+    data object Home : Route("travels","Gym Shred")
     data object Profile : Route("profile", "My Profile")
     data object Settings : Route("settings", "Settings")
     data object EditProfile : Route("edit-profile", "Edit Profile")
