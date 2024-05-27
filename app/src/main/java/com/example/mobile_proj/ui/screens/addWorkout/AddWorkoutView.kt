@@ -1,35 +1,35 @@
 package com.example.mobile_proj.ui.screens.addWorkout
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.unit.dp
@@ -53,12 +53,18 @@ fun AddWorkoutScreen(
                 .padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val context = LocalContext.current
             val muscleGroupList = stringArrayResource(R.array.muscular_group)
+            val chestExercises = stringArrayResource(R.array.chest_exercises)
+            val backExercises = stringArrayResource(R.array.back_exercises)
+            val shoulderExercises = stringArrayResource(R.array.shoulder_exercises)
+            val tricepsExercises = stringArrayResource(R.array.triceps_exercises)
+            val bicepsExercises = stringArrayResource(R.array.biceps_exercises)
+            val quadricepsExercises = stringArrayResource(R.array.quadriceps_exercises)
+            val calvesExercises = stringArrayResource(R.array.calves_exercises)
+            val forearmExercises = stringArrayResource(R.array.forearm_exercises)
+            val coreExercises = stringArrayResource(R.array.core_exercises)
             var expanded by remember { mutableStateOf(false) }
             var selectedText by remember { mutableStateOf(muscleGroupList[0]) }
-
-            val childCheckedStates = remember { mutableStateListOf(false, false, false) }
 
             Text(text = "Pick a muscle group",
                 modifier = Modifier.padding(contentPadding))
@@ -90,7 +96,6 @@ fun AddWorkoutScreen(
                                 onClick = {
                                     selectedText = item
                                     expanded = false
-                                    Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
                                 }
                             )
                         }
@@ -100,61 +105,196 @@ fun AddWorkoutScreen(
             Column (
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-
-                Text("Choose Exercises",
-                    modifier = Modifier.padding(contentPadding)
-                )
+                Text("Choose Exercises", modifier = Modifier.padding(top = 24.dp))
                 Divider(modifier = Modifier.padding(10.dp))
-                Column(Modifier.selectableGroup()) {
-                    Row(
-                        Modifier.padding(horizontal = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        when (selectedText) {
-                            muscleGroupList[0] -> {
-                                Column(modifier = Modifier.fillMaxWidth(),
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                    ) {
-                                    childCheckedStates.forEachIndexed { index, isChecked ->
-                                        Row(
-                                            modifier = Modifier.fillMaxWidth(),
-                                            horizontalArrangement = Arrangement.Center,
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Text("ese $index")
-                                            Checkbox(
-                                                checked = isChecked,
-                                                onCheckedChange = { isChecked ->
-                                                    childCheckedStates[index] = isChecked
-                                                })
-                                        }
-                                    }
-                                    Button(onClick = {
-                                        val trueIndices = childCheckedStates.mapIndexed { index, value ->
-                                            if (value) index else null
-                                        }.filterNotNull()
-                                        val selectedValues = trueIndices.map { index ->
-                                            muscleGroupList[index]
-                                        }
-                                        println(selectedValues)
-                                    }) {
-                                        Text(text = "Save")
-                                    }
+                Column( modifier = Modifier
+                    .selectableGroup()
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally)
+                {
+                    when (selectedText) {
+                        muscleGroupList[0] -> {
+                            var selectedOption by remember { mutableStateOf(chestExercises[0]) }
+                            chestExercises.forEach { exercise ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(exercise)
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    RadioButton(
+                                        selected = exercise == selectedOption,
+                                        onClick = { selectedOption = exercise}
+                                    )
                                 }
                             }
-                            "Back" -> Icon(painter = painterResource(id = R.drawable.ic_dark_theme),
-                                contentDescription = "dark-theme-icon",
-                                modifier = Modifier.size(30.dp))
-                            else -> {
-                                Icon(painter = painterResource(id = R.drawable.ic_system_theme),
-                                    contentDescription = "dark-theme-icon",
-                                    modifier = Modifier.size(30.dp))
+                            ButtonDetails(selectedOption, navController)
+                        }
+                        muscleGroupList[1] -> {
+                            var selectedOption by remember { mutableStateOf(backExercises[0]) }
+                            backExercises.forEach { exercise ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(exercise)
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    RadioButton(
+                                        selected = exercise == selectedOption,
+                                        onClick = { selectedOption = exercise}
+                                    )
+                                }
                             }
+                            ButtonDetails(selectedOption, navController)
+                        }
+                        muscleGroupList[2] -> {
+                            var selectedOption by remember { mutableStateOf(shoulderExercises[0]) }
+                            shoulderExercises.forEach { exercise ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(exercise)
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    RadioButton(
+                                        selected = exercise == selectedOption,
+                                        onClick = { selectedOption = exercise}
+                                    )
+                                }
+                            }
+                            ButtonDetails(selectedOption, navController)
+                        }
+                        muscleGroupList[3] -> {
+                            var selectedOption by remember { mutableStateOf(tricepsExercises[0]) }
+                            tricepsExercises.forEach { exercise ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(exercise)
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    RadioButton(
+                                        selected = exercise == selectedOption,
+                                        onClick = { selectedOption = exercise}
+                                    )
+                                }
+                            }
+                            ButtonDetails(selectedOption, navController)
+                        }
+                        muscleGroupList[4] -> {
+                            var selectedOption by remember { mutableStateOf(bicepsExercises[0]) }
+                            bicepsExercises.forEach { exercise ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(exercise)
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    RadioButton(
+                                        selected = exercise == selectedOption,
+                                        onClick = { selectedOption = exercise}
+                                    )
+                                }
+                            }
+                            ButtonDetails(selectedOption, navController)
+                        }
+                        muscleGroupList[5] -> {
+                            var selectedOption by remember { mutableStateOf(quadricepsExercises[0]) }
+                            quadricepsExercises.forEach { exercise ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(exercise)
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    RadioButton(
+                                        selected = exercise == selectedOption,
+                                        onClick = { selectedOption = exercise}
+                                    )
+                                }
+                            }
+                            ButtonDetails(selectedOption, navController)
+                        }
+                        muscleGroupList[6] -> {
+                            var selectedOption by remember { mutableStateOf(calvesExercises[0]) }
+                            calvesExercises.forEach { exercise ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(exercise)
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    RadioButton(
+                                        selected = exercise == selectedOption,
+                                        onClick = { selectedOption = exercise}
+                                    )
+                                }
+                            }
+                            ButtonDetails(selectedOption, navController)
+                        }
+                        muscleGroupList[7] -> {
+                            var selectedOption by remember { mutableStateOf(forearmExercises[0]) }
+                            forearmExercises.forEach { exercise ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(exercise)
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    RadioButton(
+                                        selected = exercise == selectedOption,
+                                        onClick = { selectedOption = exercise}
+                                    )
+                                }
+                            }
+                            ButtonDetails(selectedOption, navController)
+                        }
+                        muscleGroupList[8] -> {
+                            var selectedOption by remember { mutableStateOf(coreExercises[0]) }
+                            coreExercises.forEach { exercise ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(exercise)
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    RadioButton(
+                                        selected = exercise == selectedOption,
+                                        onClick = { selectedOption = exercise}
+                                    )
+                                }
+                            }
+                            ButtonDetails(selectedOption, navController)
+                        }
+                        else -> {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_system_theme),
+                                contentDescription = "dark-theme-icon",
+                                modifier = Modifier.size(30.dp)
+                            )
                         }
                     }
-                    Divider(modifier = Modifier.padding(5.dp))
                 }
+                Divider(modifier = Modifier.padding(5.dp))
             }
         }
+    }
+}
+
+@Composable
+fun ButtonDetails(string: String, navController: NavHostController) {
+    Button(onClick = {  navController.navigate(Route.ChatBot.route) }) {
+        Text("Details")
     }
 }

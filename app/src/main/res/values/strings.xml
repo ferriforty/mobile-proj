@@ -12,4 +12,109 @@
         <item name="forearm_muscles">Forearm muscles</item>
         <item name="core">Core</item>
     </string-array>
+
+    <string-array name="chest_exercises">
+        <item>Barbell Bench Press</item>
+        <item>Dumbbell Bench Press</item>
+        <item>Push-Ups</item>
+        <item>Chest Fly\'s</item>
+        <item>Cable Crossovers</item>
+        <item>Pec Deck Machine</item>
+        <item>Smith Machine Bench Press</item>
+    </string-array>
+
+    <string-array name="back_exercises">
+        <item>Lat Pull-downs</item>
+        <item>Barbell Rows</item>
+        <item>Dumbbell Rows</item>
+        <item>Seated Cable Rows</item>
+        <item>T-Bar Rows</item>
+        <item>Deadlifts</item>
+        <item>Inverted Rows</item>
+        <item>Straight-Arm Pull-downs</item>
+        <item>Bent-Over Rear Delt Fly\'s</item>
+    </string-array>
+
+    <string-array name="shoulder_exercises">
+        <item>Overhead Press</item>
+        <item>Lateral Raises</item>
+        <item>Front Raises</item>
+        <item>Rear Delt Fly\'s</item>
+        <item>Upright Rows</item>
+        <item>Face Pulls</item>
+        <item>Cable Lateral Raises</item>
+        <item>Machine Shoulder Press</item>
+        <item>Plate Front Raises</item>
+    </string-array>
+
+    <string-array name="triceps_exercises">
+        <item>Triceps Dips</item>
+        <item>Tricep Pushdowns</item>
+        <item>Overhead Tricep Extensions</item>
+        <item>Close-Grip Bench Press</item>
+        <item>Tricep Kickbacks</item>
+        <item>Diamond Push-Ups</item>
+        <item>Cable Overhead Tricep Extensions</item>
+        <item>Bodyweight Tricep Extensions</item>
+    </string-array>
+
+    <string-array name="biceps_exercises">
+        <item>Barbell Bicep Curls</item>
+        <item>Dumbbell Bicep Curls</item>
+        <item>Preacher Curls</item>
+        <item>Incline Dumbbell Curls</item>
+        <item>Cable Curls</item>
+        <item>Hammer Curls</item>
+        <item>Chin-Ups</item>
+        <item>Cross-Body Hammer Curls</item>
+    </string-array>
+
+    <string-array name="quadriceps_exercises">
+        <item>Squats</item>
+        <item>Leg Press</item>
+        <item>Lunges</item>
+        <item>Leg Extensions</item>
+        <item>Step-Ups</item>
+        <item>Hack Squat</item>
+        <item>Bulgarian Split Squats</item>
+        <item>Pistol Squats</item>
+        <item>Smith Machine Squats</item>
+        <item>Jump Squats</item>
+        <item>Box Jumps</item>
+    </string-array>
+
+    <string-array name="calves_exercises">
+        <item>Standing Calf Raises</item>
+        <item>Seated Calf Raises</item>
+        <item>Leg Press Calf Raises</item>
+        <item>Donkey Calf Raises</item>
+        <item>Smith Machine Calf Raises</item>
+        <item>Jump Rope</item>
+        <item>Single-Leg Calf Raises</item>
+        <item>Calf Press on the Leg Press Machine</item>
+    </string-array>
+
+    <string-array name="forearm_exercises">
+        <item>Wrist Curls</item>
+        <item>Reverse Wrist Curls</item>
+        <item>Hammer Curls</item>
+        <item>Plate Pinches</item>
+        <item>Towel Pull-Ups</item>
+        <item>Wrist Roller</item>
+        <item>Static Holds</item>
+        <item>Finger Curls</item>
+    </string-array>
+
+    <string-array name="core_exercises">
+        <item>Plank</item>
+        <item>Russian Twists</item>
+        <item>Crunches</item>
+        <item>Leg Raises</item>
+        <item>Mountain Climbers</item>
+        <item>Flutter Kicks</item>
+        <item>Plank with Knee-to-Elbow</item>
+        <item>Bicycle Crunches</item>
+        <item>Side Plank with Rotation</item>
+    </string-array>
+
 </resources>

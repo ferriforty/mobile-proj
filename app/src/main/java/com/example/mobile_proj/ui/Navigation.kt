@@ -16,6 +16,7 @@ import com.example.mobile_proj.ui.screens.profile.ProfileViewModel
 import com.example.mobile_proj.ui.screens.settings.SettingsScreen
 import com.example.mobile_proj.ui.screens.settings.ThemeState
 import com.example.mobile_proj.ui.screens.settings.ThemeViewModel
+import com.example.mobile_proj.ui.screens.workoutChatBot.ChatBotScreen
 import org.koin.androidx.compose.koinViewModel
 
 sealed class Route(
@@ -27,9 +28,10 @@ sealed class Route(
     data object Settings : Route("settings", "Settings")
     data object EditProfile : Route("edit-profile", "Edit Profile")
     data object AddWorkout : Route("add-workout", "New Workout")
+    data object ChatBot : Route("chat-bot", "Chat Bot (bzz bzz)")
 
     companion object {
-        val routes = setOf(Home, Profile, Settings, EditProfile, AddWorkout)
+        val routes = setOf(Home, Profile, Settings, EditProfile, AddWorkout, ChatBot)
     }
 }
 
@@ -78,6 +80,13 @@ fun NavGraph(
         with(Route.AddWorkout) {
             composable(route) {
                 AddWorkoutScreen(
+                    navController = navController
+                )
+            }
+        }
+        with(Route.ChatBot) {
+            composable(route) {
+                ChatBotScreen(
                     navController = navController
                 )
             }
