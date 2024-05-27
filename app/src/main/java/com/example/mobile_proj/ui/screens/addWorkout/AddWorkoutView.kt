@@ -1,15 +1,17 @@
 package com.example.mobile_proj.ui.screens.addWorkout
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -52,10 +55,10 @@ fun AddWorkoutScreen(
         ) {
             val context = LocalContext.current
             val muscleGroupList = stringArrayResource(R.array.muscular_group)
-
             var expanded by remember { mutableStateOf(false) }
             var selectedText by remember { mutableStateOf(muscleGroupList[0]) }
 
+            val childCheckedStates = remember { mutableStateListOf(false, false, false) }
 
             Text(text = "Pick a muscle group",
                 modifier = Modifier.padding(contentPadding))
@@ -104,15 +107,41 @@ fun AddWorkoutScreen(
                 Divider(modifier = Modifier.padding(10.dp))
                 Column(Modifier.selectableGroup()) {
                     Row(
-                        Modifier
-                            .height(56.dp)
-                            .padding(horizontal = 16.dp),
+                        Modifier.padding(horizontal = 16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         when (selectedText) {
-                            muscleGroupList[0] -> Icon(painter = painterResource(id = R.drawable.ic_light_theme),
-                                contentDescription = "light-theme-icon",
-                                modifier = Modifier.size(30.dp))
+                            muscleGroupList[0] -> {
+                                Column(modifier = Modifier.fillMaxWidth(),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                    childCheckedStates.forEachIndexed { index, isChecked ->
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.Center,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text("ese $index")
+                                            Checkbox(
+                                                checked = isChecked,
+                                                onCheckedChange = { isChecked ->
+                                                    childCheckedStates[index] = isChecked
+                                                })
+                                        }
+                                    }
+                                    Button(onClick = {
+                                        val trueIndices = childCheckedStates.mapIndexed { index, value ->
+                                            if (value) index else null
+                                        }.filterNotNull()
+                                        val selectedValues = trueIndices.map { index ->
+                                            muscleGroupList[index]
+                                        }
+                                        println(selectedValues)
+                                    }) {
+                                        Text(text = "Save")
+                                    }
+                                }
+                            }
                             "Back" -> Icon(painter = painterResource(id = R.drawable.ic_dark_theme),
                                 contentDescription = "dark-theme-icon",
                                 modifier = Modifier.size(30.dp))
