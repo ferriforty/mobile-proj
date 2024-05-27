@@ -17,6 +17,7 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.ExitToApp
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -37,6 +38,7 @@ import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.composables.TopAppBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
@@ -46,7 +48,7 @@ fun SettingsScreen(
     context: Context
 ) {
     Column {
-        TopAppBar(navController, Route.Settings)
+        TopAppBar(navController, Route.Settings, null)
         ThemeChangeRow(themeState, themeViewModel::changeTheme)
         SettingsRow(
             Icons.Outlined.AccountCircle,

@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">mobile-proj</string>
+
+    <string-array name="muscular_group">
+        <item name="chest">Chest</item>
+        <item name="back">Back</item>
+        <item name="shoulder">Shoulders</item>
+        <item name="triceps">Triceps</item>
+        <item name="biceps">Biceps</item>
+        <item name="quadriceps">Quadriceps</item>
+        <item name="calves">Calves</item>
+        <item name="forearm_muscles">Forearm muscles</item>
+        <item name="core">Core</item>
+    </string-array>
 </resources>
