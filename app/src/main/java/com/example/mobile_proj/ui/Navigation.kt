@@ -1,5 +1,6 @@
 package com.example.mobile_proj.ui
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -7,10 +8,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutScreen
 import com.example.mobile_proj.ui.screens.editProfile.EditProfileScreen
 import com.example.mobile_proj.ui.screens.editProfile.EditProfileViewModel
 import com.example.mobile_proj.ui.screens.home.HomeScreen
+import com.example.mobile_proj.ui.screens.map.MapView
 import com.example.mobile_proj.ui.screens.profile.ProfileScreen
 import com.example.mobile_proj.ui.screens.profile.ProfileViewModel
 import com.example.mobile_proj.ui.screens.settings.SettingsScreen
@@ -27,6 +30,7 @@ sealed class Route(
     data object Profile : Route("profile", "My Profile")
     data object Settings : Route("settings", "Settings")
     data object EditProfile : Route("edit-profile", "Edit Profile")
+    data object ViewMap : Route("view-map", "Map")
     data object AddWorkout : Route("add-workout", "New Workout")
     data object ChatBot : Route("chat-bot", "Chat Bot (bzz bzz)")
 
@@ -40,7 +44,9 @@ fun NavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     themeState: ThemeState,
-    themeViewModel: ThemeViewModel
+    themeViewModel: ThemeViewModel,
+    db: Connection,
+    context: Context
 ) {
     val profileVm = koinViewModel<ProfileViewModel>()
     val profileState by profileVm.state.collectAsStateWithLifecycle()
@@ -61,7 +67,7 @@ fun NavGraph(
         }
         with(Route.Settings) {
             composable(route) {
-                SettingsScreen(navController, themeState, themeViewModel)
+                SettingsScreen(navController, themeState, themeViewModel, db, context)
             }
         }
         with(Route.EditProfile) {
@@ -74,6 +80,13 @@ fun NavGraph(
                     actions = editProfileVm.actions,
                     onSubmit = { profileVm.addProfile(state.toProfile()) },
                     navController
+                )
+            }
+        }
+        with(Route.ViewMap) {
+            composable(route) {
+                MapView(
+                    navController = navController
                 )
             }
         }

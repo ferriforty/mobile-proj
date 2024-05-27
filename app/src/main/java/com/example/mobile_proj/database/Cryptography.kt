@@ -1,6 +1,5 @@
 package com.example.mobile_proj.database
 
-import java.security.SecureRandom
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
 

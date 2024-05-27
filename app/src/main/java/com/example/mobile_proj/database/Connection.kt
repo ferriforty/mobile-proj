@@ -1,7 +1,19 @@
 package com.example.mobile_proj.database
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.provider.Settings
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.mobile_proj.BuildConfig
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.Credentials
@@ -11,6 +23,9 @@ import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.example.mobile_proj.MainActivity
+import io.realm.kotlin.mongodb.exceptions.ConnectionException
+import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
 import org.mongodb.kbson.BsonDocument
 import org.mongodb.kbson.serialization.EJson
 
@@ -41,14 +56,22 @@ private fun createSharedPreference(context: Context): SharedPreferences {
  */
 class Connection(context: Context) {
     private val app: App = App.create(BuildConfig.APP_ID)
-    private var user: User
+    private lateinit var user: User
     private var sharedPreferences: SharedPreferences
+    private var context: Context
 
     init {
+        this.context = context
+        sharedPreferences = createSharedPreference(context)
+    }
+
+    /**
+     * Function to start the connection, Must be called before any operation
+     */
+    fun start() {
+        val credentials = Credentials.emailPassword(BuildConfig.EMAIL, BuildConfig.PASSWORD)
         runBlocking {
-            val credentials = Credentials.emailPassword(BuildConfig.EMAIL, BuildConfig.PASSWORD)
             user = app.login(credentials)
-            sharedPreferences = createSharedPreference(context)
         }
     }
 
@@ -82,15 +105,29 @@ class Connection(context: Context) {
     }
 
     /**
+     * function to reset username and access token from shared preference
+     */
+    fun deleteSharedPreference() {
+        sharedPreferences.edit()
+            .putString("username", "")
+            .apply()
+
+        sharedPreferences.edit()
+            .putString("access_token", "")
+            .apply()
+    }
+
+    /**
      * method to check if a user exists
      *
      * @param username email of the user
      *
      * @return true if it exists, false if not
      */
-    suspend fun userExists(username: String): Boolean {
-
-        return user.functions.call<Boolean>("user_exists", username)
+    fun userExists(username: String): Boolean {
+        return runBlocking {
+            return@runBlocking user.functions.call<Boolean>("user_exists", username)
+        }
     }
 
     /**
@@ -103,25 +140,25 @@ class Connection(context: Context) {
      * @return [res] the uuid or and empty String (if keepSigned is false) if everything went well
      * and error message if not
      */
-    suspend fun signIn(
+    fun signIn(
         username: String,
         password: String,
         keepSigned: Boolean,
     ): JSONObject {
-
-        val res = JSONObject(
-            user
-                .functions
-                .call<BsonDocument>("log_in", username, generateHash(password), keepSigned)
-                .toJson()
-        )
+        val res = runBlocking {
+            return@runBlocking JSONObject(
+                user
+                    .functions
+                    .call<BsonDocument>("log_in", username, generateHash(password), keepSigned)
+                    .toJson()
+            )
+        }
 
         if (JSONObject(res["code"].toString())["\$numberLong"] == "400" ||
             JSONObject(res["code"].toString())["\$numberLong"] == "404") {
             return res
         }
         if (keepSigned) {
-            println(res)
             insertSharedPreference(username, res["access_token"].toString())
         }
         return res
@@ -137,14 +174,16 @@ class Connection(context: Context) {
      * 400 for error in retrieving data,
      * 200 if the user logged in correctly
      */
-    suspend fun signInToken( username: String, authToken: String ): JSONObject {
+    fun signInToken( username: String, authToken: String ): JSONObject {
 
-        val res = JSONObject(
-            user
-                .functions
-                .call<BsonDocument>("log_in_with_token", username, authToken)
-                .toJson()
-        )
+        val res = runBlocking {
+            return@runBlocking JSONObject(
+                user
+                    .functions
+                    .call<BsonDocument>("log_in_with_token", username, authToken)
+                    .toJson()
+            )
+        }
 
         if (JSONObject(res["code"].toString())["\$numberLong"] == "400" ||
             JSONObject(res["code"].toString())["\$numberLong"] == "404") {
@@ -161,33 +200,76 @@ class Connection(context: Context) {
      *         "surname": string,
      *         "username": string,
      *         "password": string,
-     *         "birthDate": string,
-     *         "profileImage": byteArray
-     * @param keepSigned boolean flag that stores in sharedPreference a token if the user wants
-     * to auto log in when opening the application
+     *         "birthDate": long,
+     *         "remember": bool
      *
      * @return [res] the uuid or and empty String (if keepSigned is false) if everything went well
      * and error message if not
      */
-    suspend fun signUP(
+    fun signUp(
         arg: JSONObject,
-        keepSigned: Boolean,
     ): JSONObject {
 
         arg.put("password", generateHash(arg.get("password").toString()))
-        val res = JSONObject(
-            user
-                .functions
-                .call<BsonDocument>("insert_user_gymShred", arg.toString(), keepSigned)
-                .toJson()
-        )
+        val res = runBlocking {
+            return@runBlocking JSONObject(
+                user
+                    .functions
+                    .call<BsonDocument>("insert_user_gymShred", arg.toString())
+                    .toJson()
+            )
+        }
 
         if (JSONObject(res["code"].toString())["\$numberLong"] == "400") {
             return res
         }
-        if (keepSigned) {
+        if (arg["remember"] as Boolean) {
             insertSharedPreference(arg["username"].toString(), res["access_token"].toString())
         }
         return res
     }
+}
+
+@Composable
+fun AlertDialogConnection(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    onDismissButton: () -> Unit,
+    dialogTitle: String,
+    dialogText: String,
+    icon: ImageVector,
+) {
+
+    AlertDialog(
+        icon = {
+            Icon(icon, contentDescription = "Example Icon")
+        },
+        title = {
+            Text(text = dialogTitle)
+        },
+        text = {
+            Text(text = dialogText)
+        },
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation()
+                }
+            ) {
+                Text("Try Again")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissButton()
+                }
+            ) {
+                Text("Go to Settings")
+            }
+        }
+    )
 }
