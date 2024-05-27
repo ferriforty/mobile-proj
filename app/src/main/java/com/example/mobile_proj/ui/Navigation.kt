@@ -13,6 +13,7 @@ import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutScreen
 import com.example.mobile_proj.ui.screens.editProfile.EditProfileScreen
 import com.example.mobile_proj.ui.screens.editProfile.EditProfileViewModel
 import com.example.mobile_proj.ui.screens.home.HomeScreen
+import com.example.mobile_proj.ui.screens.map.MapView
 import com.example.mobile_proj.ui.screens.profile.ProfileScreen
 import com.example.mobile_proj.ui.screens.profile.ProfileViewModel
 import com.example.mobile_proj.ui.screens.settings.SettingsScreen
@@ -28,6 +29,7 @@ sealed class Route(
     data object Profile : Route("profile", "My Profile")
     data object Settings : Route("settings", "Settings")
     data object EditProfile : Route("edit-profile", "Edit Profile")
+    data object ViewMap : Route("view-map", "Map")
     data object AddWorkout : Route("add-workout", "New Workout")
 
     companion object {
@@ -76,6 +78,13 @@ fun NavGraph(
                     actions = editProfileVm.actions,
                     onSubmit = { profileVm.addProfile(state.toProfile()) },
                     navController
+                )
+            }
+        }
+        with(Route.ViewMap) {
+            composable(route) {
+                MapView(
+                    navController = navController
                 )
             }
         }

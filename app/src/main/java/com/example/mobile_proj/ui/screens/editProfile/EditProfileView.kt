@@ -10,19 +10,35 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Key
+import androidx.compose.material.icons.filled.SubdirectoryArrowRight
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mobile_proj.R
@@ -30,6 +46,7 @@ import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.composables.ProfileImageHolder
 import com.example.mobile_proj.ui.composables.Size
 import com.example.mobile_proj.ui.composables.TopAppBar
+import com.example.mobile_proj.ui.screens.auth.PasswordField
 import com.example.mobile_proj.ui.screens.profile.ProfileState
 import com.example.mobile_proj.utils.rememberCameraLauncher
 import com.example.mobile_proj.utils.rememberPermission
@@ -95,18 +112,63 @@ fun EditProfileScreen(
                 value = state.username,
                 onValueChange = actions::setUsername,
                 label = { Text("Change username") },
-                modifier = Modifier.fillMaxWidth().padding(5.dp)
-            )
-            Button(onClick = {
-                if (state.canSubmit) {
-                    onSubmit()
-                    navController.navigateUp()
-                } else {
-                    Toast.makeText(ctx, "Nothing changed", Toast.LENGTH_SHORT).show()
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp),
+                trailingIcon = @Composable {
+                    IconButton(
+                        onClick =  {
+                        if (state.canSubmit) {
+                            onSubmit()
+                            navController.navigateUp()
+                        } else {
+                            Toast.makeText(ctx, "Nothing changed", Toast.LENGTH_SHORT).show()
+                        }
+                    }) {
+                        Icon(
+                            Icons.Default.SubdirectoryArrowRight,
+                            contentDescription = "submit change",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
-            }) {
-                Text(text = "Submit")
+            )
+            Divider(modifier = Modifier.padding(10.dp))
+
+            /*var isPasswordVisible by remember { mutableStateOf(false) }
+
+            val leadingIcon = @Composable {
+                Icon(
+                    Icons.Default.Key,
+                    contentDescription = "",
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
+            val trailingIcon = @Composable {
+                IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                    Icon(
+                        if (isPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                        contentDescription = "",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            OutlinedTextField(
+                value = value,
+                onValueChange = onChange,
+                leadingIcon = leadingIcon,
+                trailingIcon = trailingIcon,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Password
+                ),
+                placeholder = {  },
+                label = {  },
+                singleLine = true,
+                visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation()
+            )*/
         }
     }
 }

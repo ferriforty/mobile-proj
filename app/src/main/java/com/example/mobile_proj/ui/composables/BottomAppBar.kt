@@ -33,7 +33,7 @@ fun BottomAppBar(navController: NavHostController) {
             }
             Spacer(modifier = Modifier.width(20.dp))
             IconButton(
-                onClick = { navController.navigate(Route.Profile.route) }) {
+                onClick = { navController.navigate(Route.ViewMap.route) }) {
                 Icon(Icons.Outlined.LocationOn,
                     "GPS",
                     modifier = Modifier.size(48.dp)
