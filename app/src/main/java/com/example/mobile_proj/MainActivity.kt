@@ -36,8 +36,6 @@ import com.example.mobile_proj.data.models.Theme
 import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.NavGraph
 import com.example.mobile_proj.ui.Route
-import com.example.mobile_proj.ui.composables.BottomAppBar
-import com.example.mobile_proj.ui.composables.TopAppBar
 import com.example.mobile_proj.ui.screens.home.HomeScreen
 import com.example.mobile_proj.ui.screens.settings.ThemeViewModel
 import com.example.mobile_proj.ui.theme.MobileprojTheme

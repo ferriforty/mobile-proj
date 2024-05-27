@@ -3,6 +3,7 @@ package com.example.mobile_proj.ui.screens.auth
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.provider.Settings
 import android.view.textclassifier.TextLinks.TextLink
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
@@ -30,8 +33,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mobile_proj.MainActivity
+import com.example.mobile_proj.database.AlertDialogConnection
 import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.RouteAuth
+import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
+import io.realm.kotlin.mongodb.exceptions.ServiceException
 
 @Composable
 fun SignIn(navController: NavHostController, db: Connection) {
@@ -39,6 +45,32 @@ fun SignIn(navController: NavHostController, db: Connection) {
     Surface {
         var credentials by remember { mutableStateOf(CredentialsSignIn()) }
         val context = LocalContext.current
+
+        val openAlertDialog = remember { mutableStateOf(false) }
+        val openAlertDialogCreds = remember { mutableStateOf(false) }
+
+        when {
+            openAlertDialog.value -> {
+                AlertDialogConnection(
+                    onDismissRequest = { openAlertDialog.value = false },
+                    onConfirmation = { openAlertDialog.value = false },
+                    onDismissButton = { context.startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))},
+                    dialogTitle = "Error in connecting to database",
+                    dialogText = "Check your wi-fi connection",
+                    icon = Icons.Default.Error
+                )
+            }
+            openAlertDialogCreds.value -> {
+                AlertDialogConnection(
+                    onDismissRequest = {},
+                    onConfirmation = {},
+                    onDismissButton = {},
+                    dialogTitle = "Wrong Credentials used to log in to server",
+                    dialogText = "Report the bug and a patch will soon arrive",
+                    icon = Icons.Default.BugReport
+                )
+            }
+        }
 
         Column(
             verticalArrangement = Arrangement.Center,
@@ -58,7 +90,13 @@ fun SignIn(navController: NavHostController, db: Connection) {
                 value = credentials.pwd,
                 onChange = { data -> credentials = credentials.copy(pwd = data) },
                 submit = {
-                    checkCredentials(credentials, context, db)
+                    try {
+                        checkCredentials(credentials, context, db)
+                    } catch (e: ServiceException) {
+                        openAlertDialog.value = true
+                    } catch (e: InvalidCredentialsException) {
+                        openAlertDialogCreds.value = true
+                    }
                 },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -73,7 +111,13 @@ fun SignIn(navController: NavHostController, db: Connection) {
             Spacer( modifier = Modifier.height(20.dp) )
             Button(
                 onClick = {
-                    checkCredentials(credentials, context, db)
+                    try {
+                        checkCredentials(credentials, context, db)
+                    } catch (e: ServiceException) {
+                        openAlertDialog.value = true
+                    } catch (e: InvalidCredentialsException) {
+                        openAlertDialogCreds.value = true
+                    }
                 },
                 enabled = credentials.isNotEmpty(),
                 shape = RoundedCornerShape(5.dp),

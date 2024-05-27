@@ -1,5 +1,6 @@
 package com.example.mobile_proj.ui
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController

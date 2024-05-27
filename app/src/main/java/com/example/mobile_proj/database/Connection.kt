@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.provider.Settings
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
@@ -22,7 +24,6 @@ import org.json.JSONObject
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.example.mobile_proj.MainActivity
-import com.example.mobile_proj.activities.ConnectionError
 import io.realm.kotlin.mongodb.exceptions.ConnectionException
 import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
 import org.mongodb.kbson.BsonDocument
@@ -61,19 +62,16 @@ class Connection(context: Context) {
 
     init {
         this.context = context
+        sharedPreferences = createSharedPreference(context)
+    }
+
+    /**
+     * Function to start the connection, Must be called before any operation
+     */
+    fun start() {
+        val credentials = Credentials.emailPassword(BuildConfig.EMAIL, BuildConfig.PASSWORD)
         runBlocking {
-            val credentials = Credentials.emailPassword(BuildConfig.EMAIL, BuildConfig.PASSWORD)
-
-            runCatching {
-                app.login(credentials)
-            }.onFailure {
-                context.startActivity(Intent(context, ConnectionError::class.java))
-                (context as Activity).finish()
-            }.onSuccess {
-                user = it
-            }
-
-            sharedPreferences = createSharedPreference(context)
+            user = app.login(credentials)
         }
     }
 
@@ -126,17 +124,10 @@ class Connection(context: Context) {
      *
      * @return true if it exists, false if not
      */
-    suspend fun userExists(username: String): Boolean {
-
-        runCatching {
-            user.functions.call<Boolean>("user_exists", username)
-        }.onFailure {
-            context.startActivity(Intent(context, ConnectionError::class.java))
-            (context as Activity).finish()
-        }.onSuccess {
-            return it
+    fun userExists(username: String): Boolean {
+        return runBlocking {
+            return@runBlocking user.functions.call<Boolean>("user_exists", username)
         }
-        return false
     }
 
     /**
@@ -149,18 +140,19 @@ class Connection(context: Context) {
      * @return [res] the uuid or and empty String (if keepSigned is false) if everything went well
      * and error message if not
      */
-    suspend fun signIn(
+    fun signIn(
         username: String,
         password: String,
         keepSigned: Boolean,
     ): JSONObject {
-
-        val res = JSONObject(
-            user
-                .functions
-                .call<BsonDocument>("log_in", username, generateHash(password), keepSigned)
-                .toJson()
-        )
+        val res = runBlocking {
+            return@runBlocking JSONObject(
+                user
+                    .functions
+                    .call<BsonDocument>("log_in", username, generateHash(password), keepSigned)
+                    .toJson()
+            )
+        }
 
         if (JSONObject(res["code"].toString())["\$numberLong"] == "400" ||
             JSONObject(res["code"].toString())["\$numberLong"] == "404") {
@@ -182,14 +174,16 @@ class Connection(context: Context) {
      * 400 for error in retrieving data,
      * 200 if the user logged in correctly
      */
-    suspend fun signInToken( username: String, authToken: String ): JSONObject {
+    fun signInToken( username: String, authToken: String ): JSONObject {
 
-        val res = JSONObject(
-            user
-                .functions
-                .call<BsonDocument>("log_in_with_token", username, authToken)
-                .toJson()
-        )
+        val res = runBlocking {
+            return@runBlocking JSONObject(
+                user
+                    .functions
+                    .call<BsonDocument>("log_in_with_token", username, authToken)
+                    .toJson()
+            )
+        }
 
         if (JSONObject(res["code"].toString())["\$numberLong"] == "400" ||
             JSONObject(res["code"].toString())["\$numberLong"] == "404") {
@@ -212,17 +206,19 @@ class Connection(context: Context) {
      * @return [res] the uuid or and empty String (if keepSigned is false) if everything went well
      * and error message if not
      */
-    suspend fun signUp(
+    fun signUp(
         arg: JSONObject,
     ): JSONObject {
 
         arg.put("password", generateHash(arg.get("password").toString()))
-        val res = JSONObject(
-            user
-                .functions
-                .call<BsonDocument>("insert_user_gymShred", arg.toString())
-                .toJson()
-        )
+        val res = runBlocking {
+            return@runBlocking JSONObject(
+                user
+                    .functions
+                    .call<BsonDocument>("insert_user_gymShred", arg.toString())
+                    .toJson()
+            )
+        }
 
         if (JSONObject(res["code"].toString())["\$numberLong"] == "400") {
             return res
@@ -232,4 +228,48 @@ class Connection(context: Context) {
         }
         return res
     }
+}
+
+@Composable
+fun AlertDialogConnection(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    onDismissButton: () -> Unit,
+    dialogTitle: String,
+    dialogText: String,
+    icon: ImageVector,
+) {
+
+    AlertDialog(
+        icon = {
+            Icon(icon, contentDescription = "Example Icon")
+        },
+        title = {
+            Text(text = dialogTitle)
+        },
+        text = {
+            Text(text = dialogText)
+        },
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation()
+                }
+            ) {
+                Text("Try Again")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissButton()
+                }
+            ) {
+                Text("Go to Settings")
+            }
+        }
+    )
 }
