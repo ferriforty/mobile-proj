@@ -15,3 +15,24 @@ data class Profile(
     @ColumnInfo
     val imageUri: String?
 )
+
+@Entity
+data class Workout(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+
+    @ColumnInfo
+    val username: String,
+
+    @ColumnInfo
+    val muscleGroup: String,
+
+    @ColumnInfo
+    val exercise: String,
+
+    @ColumnInfo
+    val botchat: String,
+
+    @ColumnInfo
+    val timeStamp: Long
+)

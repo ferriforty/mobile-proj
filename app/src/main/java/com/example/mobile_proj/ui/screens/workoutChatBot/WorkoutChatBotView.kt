@@ -27,18 +27,25 @@ import androidx.navigation.NavHostController
 import com.android.volley.VolleyError
 import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.composables.TopAppBar
+import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutActions
+import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatBotScreen(
     navController: NavHostController,
     workoutChatBotViewModel: WorkoutChatBotViewModel,
+    state: AddWorkoutState,
+    actions: AddWorkoutActions,
+    onSubmit: () -> Unit,
     muscleGroup: String,
     exercise: String
 ) {
     val ctx = LocalContext.current
     var stringOutput by remember { mutableStateOf("") }
     var text by remember { mutableStateOf(exercise) }
+    actions.setMuscleGroup(muscleGroup)
+    actions.setExercise(exercise)
     Column(modifier = Modifier
         .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -70,10 +77,15 @@ fun ChatBotScreen(
                         stringOutput = error.toString()
                     }
                 })
-            }) {
+            }
+            ) {
                 Text("Bot help me!")
             }
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = {
+                val currentTimestamp = System.currentTimeMillis()
+                actions.setTimeStamp(currentTimestamp)
+                onSubmit()
+                navController.navigate(Route.Home.route)}) {
                 Text(text = "Save")
             }
         }
@@ -84,4 +96,5 @@ fun ChatBotScreen(
                 Modifier.padding(16.dp))
         }
     }
+    actions.setBotchat(stringOutput)
 }

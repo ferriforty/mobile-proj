@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutScreen
+import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutViewModel
 import com.example.mobile_proj.ui.screens.editProfile.EditProfileScreen
 import com.example.mobile_proj.ui.screens.editProfile.EditProfileViewModel
 import com.example.mobile_proj.ui.screens.home.HomeScreen
@@ -61,6 +62,8 @@ fun NavGraph(
 ) {
     val profileVm = koinViewModel<ProfileViewModel>()
     val profileState by profileVm.state.collectAsStateWithLifecycle()
+    val workoutViewModel = koinViewModel<WorkoutViewModel>()
+    val workoutState by workoutViewModel.state.collectAsStateWithLifecycle()
     NavHost(
         navController = navController,
         startDestination = Route.Home.route,
@@ -68,7 +71,7 @@ fun NavGraph(
     ) {
         with(Route.Home) {
             composable(route) {
-                HomeScreen(navController)
+                HomeScreen(workoutState, navController)
             }
         }
         with(Route.Profile) {
@@ -111,13 +114,18 @@ fun NavGraph(
         with(Route.ChatBot) {
             composable(route, arguments) {
                 val workoutChatBotViewModel = koinViewModel<WorkoutChatBotViewModel>()
+                val addWorkoutViewModel = koinViewModel<AddWorkoutViewModel>()
+                val addWorkoutState by addWorkoutViewModel.state.collectAsStateWithLifecycle()
                 val muscleGroup = it.arguments?.getString("muscle-group")?: "No data"
                 val exercise = it.arguments?.getString("exercise")?: "No data"
                 ChatBotScreen(
                     navController = navController,
                     workoutChatBotViewModel = workoutChatBotViewModel,
-                    muscleGroup,
-                    exercise
+                    state = addWorkoutState,
+                    actions = addWorkoutViewModel.actions,
+                    onSubmit = {workoutViewModel.addWorkout(addWorkoutState.toWorkout())},
+                    muscleGroup = muscleGroup,
+                    exercise = exercise
                 )
             }
         }
