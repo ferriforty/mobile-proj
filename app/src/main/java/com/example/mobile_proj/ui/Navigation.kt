@@ -37,10 +37,12 @@ sealed class Route(
     data object EditProfile : Route("edit-profile", "Edit Profile")
     data object ViewMap : Route("view-map", "Map")
     data object AddWorkout : Route("add-workout", "New Workout")
-    data object ChatBot : Route("chat-bot/{data}", "Chat Bot (bzz bzz)",
-        listOf(navArgument("data") { type = NavType.StringType })
+    data object ChatBot : Route("chat-bot/{muscle-group}/{exercise}", "Chat Bot (bzz bzz)",
+        listOf(navArgument("muscle-group") { type = NavType.StringType},
+            navArgument("exercise") { type = NavType.StringType}
+        )
     ){
-        fun buildRoute(data: String) = "chat-bot/$data"
+        fun buildRoute(muscleGroup: String, exercise: String) = "chat-bot/$muscleGroup/$exercise"
     }
 
     companion object {
@@ -109,11 +111,13 @@ fun NavGraph(
         with(Route.ChatBot) {
             composable(route, arguments) {
                 val workoutChatBotViewModel = koinViewModel<WorkoutChatBotViewModel>()
-                val data = it.arguments?.getString("data") ?: "No data"
+                val muscleGroup = it.arguments?.getString("muscle-group")?: "No data"
+                val exercise = it.arguments?.getString("exercise")?: "No data"
                 ChatBotScreen(
                     navController = navController,
                     workoutChatBotViewModel = workoutChatBotViewModel,
-                    data
+                    muscleGroup,
+                    exercise
                 )
             }
         }

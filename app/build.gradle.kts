@@ -29,10 +29,12 @@ android {
         val appId = properties.getProperty("APP_ID") ?: ""
         val email = properties.getProperty("EMAIL") ?: ""
         val password = properties.getProperty("PASSWORD") ?: ""
+        val keyAPI = properties.getProperty("BOT_API_KEY") ?: ""
 
         buildConfigField( type = "String", name = "APP_ID", value = appId )
         buildConfigField( type = "String", name = "EMAIL", value = email )
         buildConfigField( type = "String", name = "PASSWORD", value = password )
+        buildConfigField( type = "String", name = "BOT_API_KEY", value = keyAPI)
     }
 
     buildTypes {

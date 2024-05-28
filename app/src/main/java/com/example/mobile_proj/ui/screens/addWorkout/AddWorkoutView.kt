@@ -8,17 +8,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,14 +26,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mobile_proj.R
 import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.composables.TopAppBar
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,14 +58,14 @@ fun AddWorkoutScreen(
             val forearmExercises = stringArrayResource(R.array.forearm_exercises)
             val coreExercises = stringArrayResource(R.array.core_exercises)
             var expanded by remember { mutableStateOf(false) }
-            var selectedText by remember { mutableStateOf(muscleGroupList[0]) }
+            var selectedMuscleGroup by remember { mutableStateOf(muscleGroupList[0]) }
 
             Text(text = "Pick a muscle group",
-                modifier = Modifier.padding(contentPadding))
+                modifier = Modifier.padding(25.dp))
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 48.dp, top = 12.dp)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
             ) {
                 ExposedDropdownMenuBox(
                     expanded = expanded,
@@ -80,7 +74,7 @@ fun AddWorkoutScreen(
                     }
                 ) {
                     TextField(
-                        value = selectedText,
+                        value = selectedMuscleGroup,
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -94,7 +88,7 @@ fun AddWorkoutScreen(
                             DropdownMenuItem(
                                 text = { Text(text = item) },
                                 onClick = {
-                                    selectedText = item
+                                    selectedMuscleGroup = item
                                     expanded = false
                                 }
                             )
@@ -110,11 +104,10 @@ fun AddWorkoutScreen(
                 Column( modifier = Modifier
                     .selectableGroup()
                     .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
                     .padding(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally)
                 {
-                    when (selectedText) {
+                    when (selectedMuscleGroup) {
                         muscleGroupList[0] -> {
                             var selectedOption by remember { mutableStateOf(chestExercises[0]) }
                             chestExercises.forEach { exercise ->
@@ -131,7 +124,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedText, selectedOption, navController)
+                            ButtonDetails(selectedMuscleGroup, selectedOption, navController)
                         }
                         muscleGroupList[1] -> {
                             var selectedOption by remember { mutableStateOf(backExercises[0]) }
@@ -149,7 +142,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedText, selectedOption, navController)
+                            ButtonDetails(selectedMuscleGroup, selectedOption, navController)
                         }
                         muscleGroupList[2] -> {
                             var selectedOption by remember { mutableStateOf(shoulderExercises[0]) }
@@ -167,7 +160,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedText, selectedOption, navController)
+                            ButtonDetails(selectedMuscleGroup, selectedOption, navController)
                         }
                         muscleGroupList[3] -> {
                             var selectedOption by remember { mutableStateOf(tricepsExercises[0]) }
@@ -185,7 +178,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedText, selectedOption, navController)
+                            ButtonDetails(selectedMuscleGroup, selectedOption, navController)
                         }
                         muscleGroupList[4] -> {
                             var selectedOption by remember { mutableStateOf(bicepsExercises[0]) }
@@ -203,7 +196,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedText, selectedOption, navController)
+                            ButtonDetails(selectedMuscleGroup, selectedOption, navController)
                         }
                         muscleGroupList[5] -> {
                             var selectedOption by remember { mutableStateOf(quadricepsExercises[0]) }
@@ -221,7 +214,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedText, selectedOption, navController)
+                            ButtonDetails(selectedMuscleGroup, selectedOption, navController)
                         }
                         muscleGroupList[6] -> {
                             var selectedOption by remember { mutableStateOf(calvesExercises[0]) }
@@ -239,7 +232,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedText, selectedOption, navController)
+                            ButtonDetails(selectedMuscleGroup, selectedOption, navController)
                         }
                         muscleGroupList[7] -> {
                             var selectedOption by remember { mutableStateOf(forearmExercises[0]) }
@@ -257,7 +250,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedText, selectedOption, navController)
+                            ButtonDetails(selectedMuscleGroup, selectedOption, navController)
                         }
                         muscleGroupList[8] -> {
                             var selectedOption by remember { mutableStateOf(coreExercises[0]) }
@@ -275,14 +268,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedText, selectedOption, navController)
-                        }
-                        else -> {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_system_theme),
-                                contentDescription = "dark-theme-icon",
-                                modifier = Modifier.size(30.dp)
-                            )
+                            ButtonDetails(selectedMuscleGroup, selectedOption, navController)
                         }
                     }
                 }
@@ -293,8 +279,8 @@ fun AddWorkoutScreen(
 }
 
 @Composable
-fun ButtonDetails(selectedMusculeGroup: String,selectedOption: String, navController: NavHostController) {
-    Button(onClick = { navController.navigate(Route.ChatBot.buildRoute(selectedOption)) }) {
+fun ButtonDetails(selectedMuscleGroup: String, selectedOption: String, navController: NavHostController) {
+    Button(onClick = { navController.navigate(Route.ChatBot.buildRoute(selectedMuscleGroup, selectedOption)) }) {
         Text("Details")
     }
 }
