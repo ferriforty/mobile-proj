@@ -131,7 +131,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedOption, navController)
+                            ButtonDetails(selectedText, selectedOption, navController)
                         }
                         muscleGroupList[1] -> {
                             var selectedOption by remember { mutableStateOf(backExercises[0]) }
@@ -149,7 +149,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedOption, navController)
+                            ButtonDetails(selectedText, selectedOption, navController)
                         }
                         muscleGroupList[2] -> {
                             var selectedOption by remember { mutableStateOf(shoulderExercises[0]) }
@@ -167,7 +167,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedOption, navController)
+                            ButtonDetails(selectedText, selectedOption, navController)
                         }
                         muscleGroupList[3] -> {
                             var selectedOption by remember { mutableStateOf(tricepsExercises[0]) }
@@ -185,7 +185,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedOption, navController)
+                            ButtonDetails(selectedText, selectedOption, navController)
                         }
                         muscleGroupList[4] -> {
                             var selectedOption by remember { mutableStateOf(bicepsExercises[0]) }
@@ -203,7 +203,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedOption, navController)
+                            ButtonDetails(selectedText, selectedOption, navController)
                         }
                         muscleGroupList[5] -> {
                             var selectedOption by remember { mutableStateOf(quadricepsExercises[0]) }
@@ -221,7 +221,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedOption, navController)
+                            ButtonDetails(selectedText, selectedOption, navController)
                         }
                         muscleGroupList[6] -> {
                             var selectedOption by remember { mutableStateOf(calvesExercises[0]) }
@@ -239,7 +239,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedOption, navController)
+                            ButtonDetails(selectedText, selectedOption, navController)
                         }
                         muscleGroupList[7] -> {
                             var selectedOption by remember { mutableStateOf(forearmExercises[0]) }
@@ -257,7 +257,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedOption, navController)
+                            ButtonDetails(selectedText, selectedOption, navController)
                         }
                         muscleGroupList[8] -> {
                             var selectedOption by remember { mutableStateOf(coreExercises[0]) }
@@ -275,7 +275,7 @@ fun AddWorkoutScreen(
                                     )
                                 }
                             }
-                            ButtonDetails(selectedOption, navController)
+                            ButtonDetails(selectedText, selectedOption, navController)
                         }
                         else -> {
                             Icon(
@@ -293,8 +293,8 @@ fun AddWorkoutScreen(
 }
 
 @Composable
-fun ButtonDetails(string: String, navController: NavHostController) {
-    Button(onClick = {  navController.navigate(Route.ChatBot.route) }) {
+fun ButtonDetails(selectedMusculeGroup: String,selectedOption: String, navController: NavHostController) {
+    Button(onClick = { navController.navigate(Route.ChatBot.buildRoute(selectedOption)) }) {
         Text("Details")
     }
 }

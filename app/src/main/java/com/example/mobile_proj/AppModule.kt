@@ -9,6 +9,7 @@ import com.example.mobile_proj.data.repositories.ThemeRepository
 import com.example.mobile_proj.ui.screens.editProfile.EditProfileViewModel
 import com.example.mobile_proj.ui.screens.profile.ProfileViewModel
 import com.example.mobile_proj.ui.screens.settings.ThemeViewModel
+import com.example.mobile_proj.ui.screens.workoutChatBot.WorkoutChatBotViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -41,4 +42,6 @@ val appModule = module {
     viewModel { ThemeViewModel(get()) }
 
     viewModel { EditProfileViewModel() }
+
+    viewModel {WorkoutChatBotViewModel() }
 }
