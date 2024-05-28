@@ -12,4 +12,13 @@
         <item name="forearm_muscles">Forearm muscles</item>
         <item name="core">Core</item>
     </string-array>
+
+    <array name="gyms">
+        <item>44.145109538190056, 12.240227430163577</item>
+        <item>44.14732427435818, 12.246634683016252</item>
+        <item>44.1500322830267, 12.248473853234964</item>
+        <item>44.14407907712725, 12.226145982700805</item>
+        <item>44.13979191593828, 12.23699111067864</item>
+        <item>44.14693446467511, 12.215509514109556</item>
+    </array>
 </resources>

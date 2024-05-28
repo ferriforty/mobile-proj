@@ -29,7 +29,7 @@ sealed class Route(
     data object Profile : Route("profile", "My Profile")
     data object Settings : Route("settings", "Settings")
     data object EditProfile : Route("edit-profile", "Edit Profile")
-    data object ViewMap : Route("view-map", "Map")
+    data object ViewMap : Route("view-map", "Gym Near You")
     data object AddWorkout : Route("add-workout", "New Workout")
 
     companion object {
