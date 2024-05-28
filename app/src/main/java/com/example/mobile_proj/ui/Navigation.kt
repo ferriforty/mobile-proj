@@ -5,9 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutScreen
 import com.example.mobile_proj.ui.screens.editProfile.EditProfileScreen
@@ -19,11 +22,14 @@ import com.example.mobile_proj.ui.screens.profile.ProfileViewModel
 import com.example.mobile_proj.ui.screens.settings.SettingsScreen
 import com.example.mobile_proj.ui.screens.settings.ThemeState
 import com.example.mobile_proj.ui.screens.settings.ThemeViewModel
+import com.example.mobile_proj.ui.screens.workoutChatBot.ChatBotScreen
+import com.example.mobile_proj.ui.screens.workoutChatBot.WorkoutChatBotViewModel
 import org.koin.androidx.compose.koinViewModel
 
 sealed class Route(
     val route: String,
     val title: String,
+    val arguments: List<NamedNavArgument> = emptyList()
 ) {
     data object Home : Route("travels","Gym Shred")
     data object Profile : Route("profile", "My Profile")
@@ -31,9 +37,16 @@ sealed class Route(
     data object EditProfile : Route("edit-profile", "Edit Profile")
     data object ViewMap : Route("view-map", "Gym Near You")
     data object AddWorkout : Route("add-workout", "New Workout")
+    data object ChatBot : Route("chat-bot/{muscle-group}/{exercise}", "Chat Bot (bzz bzz)",
+        listOf(navArgument("muscle-group") { type = NavType.StringType},
+            navArgument("exercise") { type = NavType.StringType}
+        )
+    ){
+        fun buildRoute(muscleGroup: String, exercise: String) = "chat-bot/$muscleGroup/$exercise"
+    }
 
     companion object {
-        val routes = setOf(Home, Profile, Settings, EditProfile, AddWorkout)
+        val routes = setOf(Home, Profile, Settings, EditProfile, AddWorkout, ChatBot)
     }
 }
 
@@ -92,6 +105,19 @@ fun NavGraph(
             composable(route) {
                 AddWorkoutScreen(
                     navController = navController
+                )
+            }
+        }
+        with(Route.ChatBot) {
+            composable(route, arguments) {
+                val workoutChatBotViewModel = koinViewModel<WorkoutChatBotViewModel>()
+                val muscleGroup = it.arguments?.getString("muscle-group")?: "No data"
+                val exercise = it.arguments?.getString("exercise")?: "No data"
+                ChatBotScreen(
+                    navController = navController,
+                    workoutChatBotViewModel = workoutChatBotViewModel,
+                    muscleGroup,
+                    exercise
                 )
             }
         }
