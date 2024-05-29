@@ -39,6 +39,7 @@ fun ChatBotScreen(
     val ctx = LocalContext.current
     var stringOutput by remember { mutableStateOf("") }
     var text by remember { mutableStateOf(exercise) }
+
     Column(modifier = Modifier
         .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally

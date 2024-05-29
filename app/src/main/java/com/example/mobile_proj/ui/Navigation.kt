@@ -19,6 +19,7 @@ import com.example.mobile_proj.ui.screens.home.HomeScreen
 import com.example.mobile_proj.ui.screens.map.MapView
 import com.example.mobile_proj.ui.screens.profile.ProfileScreen
 import com.example.mobile_proj.ui.screens.profile.ProfileViewModel
+import com.example.mobile_proj.ui.screens.schedule.ScheduleView
 import com.example.mobile_proj.ui.screens.settings.SettingsScreen
 import com.example.mobile_proj.ui.screens.settings.ThemeState
 import com.example.mobile_proj.ui.screens.settings.ThemeViewModel
@@ -36,6 +37,8 @@ sealed class Route(
     data object Settings : Route("settings", "Settings")
     data object EditProfile : Route("edit-profile", "Edit Profile")
     data object ViewMap : Route("view-map", "Gym Near You")
+    data object Schedule : Route("schedule", "Schedule Your Workout")
+
     data object AddWorkout : Route("add-workout", "New Workout")
     data object ChatBot : Route("chat-bot/{muscle-group}/{exercise}", "Chat Bot (bzz bzz)",
         listOf(navArgument("muscle-group") { type = NavType.StringType},
@@ -79,6 +82,11 @@ fun NavGraph(
         with(Route.Settings) {
             composable(route) {
                 SettingsScreen(navController, themeState, themeViewModel, db, context)
+            }
+        }
+        with(Route.Schedule) {
+            composable(route) {
+                ScheduleView(navController, themeState, themeViewModel, db, context)
             }
         }
         with(Route.EditProfile) {

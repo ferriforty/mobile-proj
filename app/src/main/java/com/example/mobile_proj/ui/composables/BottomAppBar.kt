@@ -25,7 +25,7 @@ fun BottomAppBar(navController: NavHostController) {
         actions = {
             Spacer(modifier = Modifier.width(20.dp))
             IconButton(
-                onClick = { navController.navigate(Route.Profile.route) }) {
+                onClick = { navController.navigate(Route.Schedule.route) }) {
                 Icon(Icons.Outlined.DateRange,
                     "Calendar",
                     modifier = Modifier.size(48.dp)
