@@ -22,6 +22,9 @@ data class Workout(
     val id: Int = 0,
 
     @ColumnInfo
+    val idRemote: String = "",
+
+    @ColumnInfo
     val username: String,
 
     @ColumnInfo

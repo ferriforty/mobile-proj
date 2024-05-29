@@ -136,8 +136,8 @@ fun NavGraph(
                     state = addWorkoutState,
                     actions = addWorkoutViewModel.actions,
                     onSubmit = {
-                        workoutViewModel.addWorkout(addWorkoutState.toWorkout())
-                        db.insertWorkout(addWorkoutState.toWorkout())
+                        val idRemote = db.insertWorkout(addWorkoutState.toWorkout())
+                        workoutViewModel.addWorkout(addWorkoutState.toWorkout().copy(idRemote = idRemote))
                     },
                     muscleGroup = muscleGroup,
                     exercise = exercise,

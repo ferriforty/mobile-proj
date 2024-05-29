@@ -30,6 +30,7 @@ import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.composables.TopAppBar
 import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutActions
 import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutState
+import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -173,6 +173,7 @@ class Connection(context: Context) {
             JSONObject(res["code"].toString())["\$numberLong"] == "404") {
             return res
         }
+        res.put("same", retrieveFromSharedPreference().first == username)
         insertSharedPreference(username, res["access_token"].toString())
         return res
     }
@@ -202,6 +203,7 @@ class Connection(context: Context) {
             JSONObject(res["code"].toString())["\$numberLong"] == "404") {
             return res
         }
+        res.put("same", true)
         return res
     }
 
@@ -236,6 +238,7 @@ class Connection(context: Context) {
         if (JSONObject(res["code"].toString())["\$numberLong"] == "400") {
             return res
         }
+        res.put("same", false)
         insertSharedPreference(arg["username"].toString(), res["access_token"].toString())
         return res
     }
@@ -247,12 +250,16 @@ class Connection(context: Context) {
      */
     fun insertWorkout(
         workout: Workout
-    ){
-        runBlocking {
-            user
+    ): String {
+        val res = runBlocking {
+            return@runBlocking JSONObject(user
                 .functions
                 .call<BsonDocument>("insert_workout", Gson().toJson(workout))
+                .toJson()
+            )
         }
+        val remoteId = JSONObject(JSONObject(res["message"].toString())["insertedId"].toString())["\$oid"]
+        return remoteId.toString()
     }
 
     /**
@@ -287,7 +294,8 @@ class Connection(context: Context) {
                 botchat =  workoutJson["botchat"].toString(),
                 exercise =  workoutJson["exercise"].toString(),
                 muscleGroup =  workoutJson["muscleGroup"].toString(),
-                timeStamp =  0
+                favorite =  false,
+                idRemote = workoutJson["_id"].toString()
             )
         }
 

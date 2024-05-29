@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
                     val workoutViewModel = koinViewModel<WorkoutViewModel>()
                     val workoutState by workoutViewModel.state.collectAsStateWithLifecycle()
 
-                    //db.retrieveWorkouts(db.retrieveFromSharedPreference().first).forEach { x -> println(x) }
+                    db.retrieveWorkouts(db.retrieveFromSharedPreference().first).forEach { x -> println(x) }
 
                     when {
                         openAlertDialog.value -> {
