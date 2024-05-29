@@ -16,6 +16,7 @@ import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutScreen
 import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutViewModel
 import com.example.mobile_proj.ui.screens.editProfile.EditProfileScreen
 import com.example.mobile_proj.ui.screens.editProfile.EditProfileViewModel
+import com.example.mobile_proj.ui.screens.favoriteWorkout.FavoriteScreen
 import com.example.mobile_proj.ui.screens.home.HomeScreen
 import com.example.mobile_proj.ui.screens.map.MapView
 import com.example.mobile_proj.ui.screens.profile.ProfileScreen
@@ -50,9 +51,10 @@ sealed class Route(
     ){
         fun buildRoute(muscleGroup: String, exercise: String) = "chat-bot/$muscleGroup/$exercise"
     }
+    data object FavoriteWorkout : Route("favorite-workout", "Your Favorite Workout")
 
     companion object {
-        val routes = setOf(Home, Profile, Settings, EditProfile, AddWorkout, ChatBot)
+        val routes = setOf(Home, Profile, Settings, EditProfile, AddWorkout, ChatBot, FavoriteWorkout)
     }
 }
 
@@ -69,6 +71,9 @@ fun NavGraph(
     val profileState by profileVm.state.collectAsStateWithLifecycle()
     val workoutViewModel = koinViewModel<WorkoutViewModel>()
     val workoutState by workoutViewModel.state.collectAsStateWithLifecycle()
+    val workoutChatBotViewModel = koinViewModel<WorkoutChatBotViewModel>()
+    val addWorkoutViewModel = koinViewModel<AddWorkoutViewModel>()
+    val addWorkoutState by addWorkoutViewModel.state.collectAsStateWithLifecycle()
     NavHost(
         navController = navController,
         startDestination = Route.Home.route,
@@ -76,7 +81,7 @@ fun NavGraph(
     ) {
         with(Route.Home) {
             composable(route) {
-                HomeScreen(workoutViewModel, workoutState, navController)
+                HomeScreen (workoutViewModel, workoutState, navController)
             }
         }
         with(Route.Profile) {
@@ -123,9 +128,6 @@ fun NavGraph(
         }
         with(Route.ChatBot) {
             composable(route, arguments) {
-                val workoutChatBotViewModel = koinViewModel<WorkoutChatBotViewModel>()
-                val addWorkoutViewModel = koinViewModel<AddWorkoutViewModel>()
-                val addWorkoutState by addWorkoutViewModel.state.collectAsStateWithLifecycle()
                 val muscleGroup = it.arguments?.getString("muscle-group")?: "No data"
                 val exercise = it.arguments?.getString("exercise")?: "No data"
                 ChatBotScreen(
@@ -141,6 +143,12 @@ fun NavGraph(
                     exercise = exercise,
                     db
                 )
+            }
+        }
+        with(Route.FavoriteWorkout) {
+            composable(route) {
+                val favoriteState by workoutViewModel.favoriteList.collectAsStateWithLifecycle()
+                FavoriteScreen(workoutViewModel, favoriteState, navController)
             }
         }
     }

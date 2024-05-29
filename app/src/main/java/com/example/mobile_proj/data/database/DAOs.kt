@@ -21,8 +21,12 @@ interface ProfileDAO {
 
 @Dao
 interface WorkoutDAO {
-    @Query("SELECT * FROM workout")
+    @Query("SELECT * FROM workout ORDER BY id DESC")
     fun getWorkoutList(): Flow<List<Workout>>
+    @Query("SELECT * FROM workout WHERE favorite = 1")
+    fun getFavoriteWorkoutList(): Flow<List<Workout>>
+    @Query("UPDATE workout SET favorite = :favorite WHERE id = :id")
+    suspend fun setFavorite(id: Int, favorite: Boolean)
     @Upsert
     suspend fun upsert(workout: Workout)
     @Delete

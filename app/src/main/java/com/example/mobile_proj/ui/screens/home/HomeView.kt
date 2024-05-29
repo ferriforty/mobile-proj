@@ -17,6 +17,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Warning
@@ -28,12 +30,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -110,7 +117,7 @@ fun WorkoutRow(workoutViewModel: WorkoutViewModel, item: Workout) {
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(10.dp),
+                .padding(5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
@@ -120,10 +127,31 @@ fun WorkoutRow(workoutViewModel: WorkoutViewModel, item: Workout) {
                 Text(text = item.exercise,
                     modifier = Modifier.padding(start = 12.dp))
             }
-            Button(colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                onClick = { workoutViewModel.deleteWorkout(item) }
-            ) {
-                Icon(Icons.Outlined.Delete, "Delete Workout", tint = Color.White)
+            Column {
+                Row {
+                    var isFavorite by remember { mutableStateOf(item.favorite) }
+                    IconToggleButton(
+                        checked = isFavorite,
+                        onCheckedChange = {
+                            isFavorite = !isFavorite
+                            workoutViewModel.setFavorite(item.id, isFavorite)
+                        }
+                    ) {
+                        Icon(
+                            imageVector = if (isFavorite) {
+                                Icons.Filled.Favorite
+                            } else {
+                                Icons.Default.FavoriteBorder
+                            },
+                            contentDescription = null
+                        )
+                    }
+                    Button(colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                        onClick = { workoutViewModel.deleteWorkout(item) }
+                    ) {
+                        Icon(Icons.Outlined.Delete, "Delete Workout", tint = Color.White)
+                    }
+                }
             }
         }
     }
