@@ -13,6 +13,5 @@ class WorkoutRepository(
 
     suspend fun setFavorite(id: Int, favorite: Boolean) = workoutDAO.setFavorite(id, favorite)
     suspend fun upsert(workout: Workout) = workoutDAO.upsert(workout)
-
     suspend fun delete(workout: Workout) = workoutDAO.delete(workout)
 }

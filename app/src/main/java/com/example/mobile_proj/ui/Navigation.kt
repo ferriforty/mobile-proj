@@ -27,6 +27,8 @@ import com.example.mobile_proj.ui.screens.settings.ThemeState
 import com.example.mobile_proj.ui.screens.settings.ThemeViewModel
 import com.example.mobile_proj.ui.screens.workoutChatBot.ChatBotScreen
 import com.example.mobile_proj.ui.screens.workoutChatBot.WorkoutChatBotViewModel
+import com.google.gson.Gson
+import org.json.JSONObject
 import org.koin.androidx.compose.koinViewModel
 
 sealed class Route(
@@ -133,9 +135,13 @@ fun NavGraph(
                     workoutChatBotViewModel = workoutChatBotViewModel,
                     state = addWorkoutState,
                     actions = addWorkoutViewModel.actions,
-                    onSubmit = {workoutViewModel.addWorkout(addWorkoutState.toWorkout())},
+                    onSubmit = {
+                        val idRemote = db.insertWorkout(addWorkoutState.toWorkout())
+                        workoutViewModel.addWorkout(addWorkoutState.toWorkout().copy(idRemote = idRemote))
+                    },
                     muscleGroup = muscleGroup,
-                    exercise = exercise
+                    exercise = exercise,
+                    db
                 )
             }
         }
