@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -58,27 +59,29 @@ import com.example.mobile_proj.ui.screens.settings.ThemeViewModel
 import com.example.mobile_proj.utils.PermissionStatus
 import com.example.mobile_proj.utils.rememberPermission
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleView(
     navController: NavHostController,
-    themeState: ThemeState,
-    themeViewModel: ThemeViewModel,
     db: Connection,
     context: Context
 ) {
 
     var showPermissionAlert by remember { mutableStateOf(false) }
-    val notificationPermission = rememberPermission(
-        Manifest.permission.POST_NOTIFICATIONS
-    ) { status ->
-        when (status) {
-            PermissionStatus.Granted -> {}
-            PermissionStatus.Denied -> {}
-            PermissionStatus.PermanentlyDenied -> { showPermissionAlert = true }
-            PermissionStatus.Unknown -> {}
+    val notificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        rememberPermission(
+            Manifest.permission.POST_NOTIFICATIONS
+        ) { status ->
+            when (status) {
+                PermissionStatus.Granted -> {}
+                PermissionStatus.Denied -> {}
+                PermissionStatus.PermanentlyDenied -> { showPermissionAlert = true }
+                PermissionStatus.Unknown -> {}
+            }
         }
+    } else {
+        Toast.makeText(context, "Android version low, update your phone", Toast.LENGTH_LONG).show()
+        return
     }
 
     // Initialize states for the child checkboxes
@@ -160,7 +163,12 @@ fun ScheduleView(
                     notificationPermission.launchPermissionRequest()
                 }
 
-                scheduled.schedulePushNotifications(weekDays.filterIndexed { index, _ ->  childCheckedStates[index]}.toTypedArray())
+                val weeksArray = weekDays.filterIndexed { index, _ ->  childCheckedStates[index]}.toTypedArray()
+                scheduled.schedulePushNotifications(weeksArray)
+                Toast.makeText(context, "Workout Schedule Updated", Toast.LENGTH_SHORT).show()
+                db.insertWorkoutSchedSharedPreference(weeksArray)
+                navController.navigateUp()
+
             }) {
                 Text(text = "Submit Schedule")
                 

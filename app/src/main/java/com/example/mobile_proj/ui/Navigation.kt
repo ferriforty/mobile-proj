@@ -84,7 +84,7 @@ fun NavGraph(
         }
         with(Route.Profile) {
             composable(route) {
-                ProfileScreen(profileState, navController)
+                ProfileScreen(profileState, navController, db)
             }
         }
         with(Route.Settings) {
@@ -94,7 +94,7 @@ fun NavGraph(
         }
         with(Route.Schedule) {
             composable(route) {
-                ScheduleView(navController, themeState, themeViewModel, db, context)
+                ScheduleView(navController, db, context)
             }
         }
         with(Route.EditProfile) {
