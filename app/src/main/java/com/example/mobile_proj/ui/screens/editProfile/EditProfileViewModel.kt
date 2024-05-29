@@ -11,9 +11,7 @@ data class EditProfileState(
     val username: String = "",
     val imageUri: Uri =  Uri.EMPTY
 ) {
-    val canSubmit get() = username.isNotBlank()
     fun toProfile() = Profile(
-        id = 1,
         username = username,
         imageUri = imageUri.toString()
     )

@@ -21,6 +21,13 @@ class ProfileViewModel(
         initialValue = ProfileState(emptyList())
     )
 
+    fun setUsername(id: Int, username: String) = viewModelScope.launch {
+        repository.setUsername(id, username)
+    }
+    fun setImageUri(id: Int, imageUri: String) = viewModelScope.launch {
+        repository.setImageUri(id, imageUri)
+    }
+
     fun addProfile(profile: Profile) = viewModelScope.launch {
         repository.upsert(profile)
     }

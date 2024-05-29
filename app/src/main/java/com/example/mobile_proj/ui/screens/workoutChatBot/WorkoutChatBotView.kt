@@ -84,7 +84,9 @@ fun ChatBotScreen(
             }
             Button(onClick = {
                 onSubmit()
-                navController.navigate(Route.Home.route)}) {
+                navController.navigate(Route.Home.route) {
+                    popUpTo(Route.Home.route) { inclusive = true }
+                }}) {
                 Text(text = "Save")
             }
         }

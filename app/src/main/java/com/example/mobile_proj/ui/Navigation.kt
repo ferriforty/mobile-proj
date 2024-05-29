@@ -105,7 +105,7 @@ fun NavGraph(
                     profileState = profileState,
                     state = state,
                     actions = editProfileVm.actions,
-                    onSubmit = { profileVm.addProfile(state.toProfile()) },
+                    onSubmit = { profileVm.setUsername(1, state.username) },
                     navController
                 )
             }

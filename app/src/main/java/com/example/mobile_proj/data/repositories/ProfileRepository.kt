@@ -12,6 +12,15 @@ class ProfileRepository(
     private val contentResolver: ContentResolver
 ) {
     val profile: Flow<List<Profile>> = profileDAO.getProfile()
+    suspend fun setImageUri(id: Int, imageUri: String){
+        val uri = saveImageToStorage(Uri.parse(imageUri),
+            contentResolver,
+            "Profile-img"
+        )
+       profileDAO.setImageUri(id, uri.toString())
+    }
+
+    suspend fun setUsername(id: Int, username: String) = profileDAO.setUsername(id, username)
     suspend fun upsert(profile: Profile) {
         if (profile.imageUri?.isNotEmpty() == true) {
             val imageUri = saveImageToStorage(
@@ -20,8 +29,6 @@ class ProfileRepository(
                 "Profile-img"
             )
             profileDAO.upsert(profile.copy(imageUri = imageUri.toString()))
-        } else {
-            profileDAO.setUsername(profile.id, profile.username)
         }
     }
 
