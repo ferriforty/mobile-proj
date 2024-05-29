@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
@@ -35,9 +37,7 @@ import com.example.mobile_proj.ui.composables.TopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddWorkoutScreen(
-    navController: NavHostController
-) {
+fun AddWorkoutScreen( navController: NavHostController ) {
     Scaffold (
         topBar = { TopAppBar(navController, Route.AddWorkout, null) }
     ) { contentPadding ->
@@ -97,6 +97,9 @@ fun AddWorkoutScreen(
                 }
             }
             Column (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
                 Text("Choose Exercises", modifier = Modifier.padding(top = 24.dp))

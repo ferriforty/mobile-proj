@@ -83,8 +83,6 @@ fun ChatBotScreen(
                 Text("Bot help me!")
             }
             Button(onClick = {
-                val currentTimestamp = System.currentTimeMillis()
-                actions.setTimeStamp(currentTimestamp)
                 onSubmit()
                 navController.navigate(Route.Home.route)}) {
                 Text(text = "Save")

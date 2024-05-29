@@ -20,7 +20,14 @@ class WorkoutViewModel(
         started = SharingStarted.WhileSubscribed(),
         initialValue = WorkoutState(emptyList())
     )
-
+    val favoriteList = repository.favoriteWorkout.map { WorkoutState(workout = it) }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = WorkoutState(emptyList())
+    )
+    fun setFavorite(id: Int, favorite: Boolean) = viewModelScope.launch {
+        repository.setFavorite(id, favorite)
+    }
     fun addWorkout(workout: Workout) = viewModelScope.launch {
         repository.upsert(workout)
     }

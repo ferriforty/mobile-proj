@@ -41,7 +41,7 @@ fun BottomAppBar(navController: NavHostController) {
             }
             Spacer(modifier = Modifier.width(110.dp))
             IconButton(
-                onClick = { navController.navigate(Route.Profile.route) }) {
+                onClick = { navController.navigate(Route.FavoriteWorkout.route) }) {
                 Icon(Icons.Outlined.Favorite,
                     "Favorite",
                     modifier = Modifier.size(48.dp)

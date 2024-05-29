@@ -34,5 +34,5 @@ data class Workout(
     val botchat: String,
 
     @ColumnInfo
-    val timeStamp: Long
+    val favorite: Boolean
 )

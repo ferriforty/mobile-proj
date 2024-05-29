@@ -11,14 +11,14 @@ data class AddWorkoutState(
     val muscleGroup: String = "",
     val exercise: String = "",
     val botchat: String = "",
-    val timeStamp: Long = 0
+    val favorite: Boolean = false
 ) {
     fun toWorkout() = Workout(
         username = username,
         muscleGroup =  muscleGroup,
         exercise = exercise,
         botchat = botchat,
-        timeStamp = timeStamp
+        favorite = favorite
     )
 }
 
@@ -27,7 +27,7 @@ interface AddWorkoutActions {
     fun setMuscleGroup(muscleGroup: String)
     fun setExercise(exercise: String)
     fun setBotchat(botchat: String)
-    fun setTimeStamp(timeStamp: Long)
+    fun setFavorite(favorite: Boolean)
 }
 
 class AddWorkoutViewModel : ViewModel() {
@@ -47,7 +47,7 @@ class AddWorkoutViewModel : ViewModel() {
         override fun setBotchat(botchat: String) =
             _state.update { it.copy(botchat = botchat) }
 
-        override fun setTimeStamp(timeStamp: Long) =
-            _state.update { it.copy(timeStamp = timeStamp) }
+        override fun setFavorite(favorite: Boolean) =
+            _state.update { it.copy(favorite = favorite) }
     }
 }
