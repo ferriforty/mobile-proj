@@ -20,6 +20,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Warning
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,12 +44,13 @@ import androidx.navigation.NavHostController
 import com.example.mobile_proj.data.database.Workout
 import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.WorkoutState
+import com.example.mobile_proj.ui.WorkoutViewModel
 import com.example.mobile_proj.ui.composables.BottomAppBar
 import com.example.mobile_proj.ui.composables.TopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(state: WorkoutState, navController: NavHostController) {
+fun HomeScreen(workoutViewModel: WorkoutViewModel, state: WorkoutState, navController: NavHostController) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -79,7 +82,7 @@ fun HomeScreen(state: WorkoutState, navController: NavHostController) {
                     .padding(contentPadding)
             ) {
                 items(state.workout) { item ->
-                    WorkoutRow(item = item)
+                    WorkoutRow(workoutViewModel, item = item)
                 }
             }
         }else {
@@ -91,7 +94,7 @@ fun HomeScreen(state: WorkoutState, navController: NavHostController) {
 }
 
 @Composable
-fun WorkoutRow(item: Workout) {
+fun WorkoutRow(workoutViewModel: WorkoutViewModel, item: Workout) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         border = BorderStroke(2.dp, Color.White),
@@ -105,7 +108,9 @@ fun WorkoutRow(item: Workout) {
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxSize().padding(10.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
@@ -115,7 +120,11 @@ fun WorkoutRow(item: Workout) {
                 Text(text = item.exercise,
                     modifier = Modifier.padding(start = 12.dp))
             }
-            Icon(Icons.Outlined.Delete, "Delete Workout")
+            Button(colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                onClick = { workoutViewModel.deleteWorkout(item) }
+            ) {
+                Icon(Icons.Outlined.Delete, "Delete Workout", tint = Color.White)
+            }
         }
     }
 }

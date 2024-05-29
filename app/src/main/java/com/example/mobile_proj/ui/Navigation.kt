@@ -74,7 +74,7 @@ fun NavGraph(
     ) {
         with(Route.Home) {
             composable(route) {
-                HomeScreen(workoutState, navController)
+                HomeScreen(workoutViewModel, workoutState, navController)
             }
         }
         with(Route.Profile) {
