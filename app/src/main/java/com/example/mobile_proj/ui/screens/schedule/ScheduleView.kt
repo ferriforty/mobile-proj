@@ -171,7 +171,6 @@ fun ScheduleView(
 
             }) {
                 Text(text = "Submit Schedule")
-                
             }
         }
     }

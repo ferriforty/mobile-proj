@@ -1,8 +1,6 @@
 package com.example.mobile_proj
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
@@ -20,16 +18,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.example.mobile_proj.data.models.Theme
 import com.example.mobile_proj.database.AlertDialogConnection
 import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.NavGraph
+import com.example.mobile_proj.ui.WorkoutViewModel
 import com.example.mobile_proj.ui.screens.settings.ThemeViewModel
 import com.example.mobile_proj.ui.theme.MobileprojTheme
-import com.google.android.gms.location.LocationServices
 import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
 import io.realm.kotlin.mongodb.exceptions.ServiceException
 import org.koin.androidx.compose.koinViewModel
@@ -65,6 +62,11 @@ class MainActivity : ComponentActivity() {
                     } catch (e: InvalidCredentialsException) {
                         openAlertDialogCreds.value = true
                     }
+
+                    val workoutViewModel = koinViewModel<WorkoutViewModel>()
+                    val workoutState by workoutViewModel.state.collectAsStateWithLifecycle()
+
+                    //db.retrieveWorkouts(db.retrieveFromSharedPreference().first).forEach { x -> println(x) }
 
                     when {
                         openAlertDialog.value -> {

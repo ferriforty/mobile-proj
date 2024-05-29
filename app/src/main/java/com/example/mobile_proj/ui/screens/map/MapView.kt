@@ -107,6 +107,7 @@ fun MapView(navController: NavHostController) {
             dismissButton = {
                 TextButton(onClick = {
                     showLocationDisabledAlert = false
+                    navController.navigateUp()
                 }) {
                     Text("Dismiss")
                 }
@@ -132,7 +133,10 @@ fun MapView(navController: NavHostController) {
                     Text("Go to App Settings")
                 }
             },
-            onDismissRequest = { showPermissionPermanentlyDeniedAlert = false }
+            onDismissRequest = {
+                showPermissionPermanentlyDeniedAlert = false
+                navController.navigateUp()
+            }
         )
     }
 }

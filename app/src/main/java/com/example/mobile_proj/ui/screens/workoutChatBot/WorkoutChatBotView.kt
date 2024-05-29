@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.android.volley.VolleyError
+import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.composables.TopAppBar
 import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutActions
@@ -39,7 +40,8 @@ fun ChatBotScreen(
     actions: AddWorkoutActions,
     onSubmit: () -> Unit,
     muscleGroup: String,
-    exercise: String
+    exercise: String,
+    db: Connection
 ) {
     val ctx = LocalContext.current
     var stringOutput by remember { mutableStateOf("") }
@@ -47,6 +49,7 @@ fun ChatBotScreen(
 
     actions.setMuscleGroup(muscleGroup)
     actions.setExercise(exercise)
+    actions.setUsername(db.retrieveFromSharedPreference().first)
     Column(modifier = Modifier
         .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally

@@ -17,6 +17,9 @@ import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.example.mobile_proj.data.database.Workout
+import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutState
+import com.google.gson.Gson
 import org.mongodb.kbson.BsonDocument
 
 
@@ -170,9 +173,7 @@ class Connection(context: Context) {
             JSONObject(res["code"].toString())["\$numberLong"] == "404") {
             return res
         }
-        if (keepSigned) {
-            insertSharedPreference(username, res["access_token"].toString())
-        }
+        insertSharedPreference(username, res["access_token"].toString())
         return res
     }
 
@@ -235,10 +236,62 @@ class Connection(context: Context) {
         if (JSONObject(res["code"].toString())["\$numberLong"] == "400") {
             return res
         }
-        if (arg["remember"] as Boolean) {
-            insertSharedPreference(arg["username"].toString(), res["access_token"].toString())
-        }
+        insertSharedPreference(arg["username"].toString(), res["access_token"].toString())
         return res
+    }
+
+    /**
+     * insert workout
+     *
+     * @param workout
+     */
+    fun insertWorkout(
+        workout: Workout
+    ){
+        runBlocking {
+            user
+                .functions
+                .call<BsonDocument>("insert_workout", Gson().toJson(workout))
+        }
+    }
+
+    /**
+     * retrieve workouts
+     *
+     * @param username Username owner workouts
+     */
+    fun retrieveWorkouts(
+        username: String
+    ): Array<Workout>{
+        val res = runBlocking {
+            return@runBlocking JSONObject(
+                user
+                    .functions
+                    .call<BsonDocument>("retrieve_workouts_by_user", username)
+                    .toJson()
+            )
+        }
+
+        if (JSONObject(res["code"].toString())["\$numberLong"] == "400") {
+            return arrayOf()
+        }
+
+        val workoutJsonArray = res.getJSONArray("message")
+        var workoutArray: Array<Workout> = arrayOf()
+
+        for (i in 0..<workoutJsonArray.length()) {
+            val workoutJson = JSONObject(workoutJsonArray[i].toString())
+
+            workoutArray += Workout(
+                username = workoutJson["username"].toString(),
+                botchat =  workoutJson["botchat"].toString(),
+                exercise =  workoutJson["exercise"].toString(),
+                muscleGroup =  workoutJson["muscleGroup"].toString(),
+                timeStamp =  0
+            )
+        }
+
+        return workoutArray
     }
 }
 
