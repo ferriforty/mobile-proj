@@ -3,7 +3,9 @@ package com.example.mobile_proj.data.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
-@Database(entities = [Profile::class], version = 1)
+@Database(entities = [Profile::class, Workout::class], version = 3)
 abstract class ProfileDatabase : RoomDatabase() {
     abstract fun profileDAO(): ProfileDAO
+
+    abstract fun workoutDAO(): WorkoutDAO
 }
