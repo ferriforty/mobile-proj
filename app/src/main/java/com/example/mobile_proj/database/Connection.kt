@@ -1,13 +1,7 @@
 package com.example.mobile_proj.database
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.provider.Settings
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BugReport
-import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -23,11 +17,7 @@ import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import com.example.mobile_proj.MainActivity
-import io.realm.kotlin.mongodb.exceptions.ConnectionException
-import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
 import org.mongodb.kbson.BsonDocument
-import org.mongodb.kbson.serialization.EJson
 
 
 /**
@@ -90,6 +80,28 @@ class Connection(context: Context) {
         sharedPreferences.edit()
             .putString("access_token", accessToken)
             .apply()
+    }
+
+    /**
+     * function to insert workout schedule in shared preference
+     *
+     * @param weekArray array of days to insert in sharedPreferences
+     *
+     */
+    fun insertWorkoutSchedSharedPreference(weekArray: Array<String>) {
+        sharedPreferences.edit()
+            .putString("weekArray", weekArray.joinToString())
+            .apply()
+    }
+
+    /**
+     * function to retrieve workout schedule from shared preference
+     *
+     * @return weekArray, array of weeks days for schedule workout
+     *
+     */
+    fun retrieveWorkoutSchedSharedPreference(): String {
+        return sharedPreferences.getString("weekArray", "").orEmpty()
     }
 
     /**
