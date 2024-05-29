@@ -1,5 +1,6 @@
 package com.example.mobile_proj.ui.screens.home
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +18,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Warning
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -30,9 +34,12 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.mobile_proj.data.database.Workout
 import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.WorkoutState
 import com.example.mobile_proj.ui.composables.BottomAppBar
@@ -67,18 +74,48 @@ fun HomeScreen(state: WorkoutState, navController: NavHostController) {
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth().padding(contentPadding)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(contentPadding)
             ) {
                 items(state.workout) { item ->
-                    Row {
-                        Text(text = item.muscleGroup)
-                    }
+                    WorkoutRow(item = item)
                 }
             }
         }else {
             NoItemsPlaceholder(modifier = Modifier
                 .padding(contentPadding)
             )
+        }
+    }
+}
+
+@Composable
+fun WorkoutRow(item: Workout) {
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+        border = BorderStroke(2.dp, Color.White),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .padding(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        )
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxSize().padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(fontWeight = FontWeight.ExtraBold,
+                    text = item.muscleGroup,
+                    modifier = Modifier.padding(start = 12.dp))
+                Text(text = item.exercise,
+                    modifier = Modifier.padding(start = 12.dp))
+            }
+            Icon(Icons.Outlined.Delete, "Delete Workout")
         }
     }
 }
