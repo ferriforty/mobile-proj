@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">mobile-proj</string>
+    <string name="app_name">GymShred</string>
 
     <string-array name="muscular_group">
         <item name="chest">Chest</item>

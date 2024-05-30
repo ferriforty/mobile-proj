@@ -19,7 +19,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.ExitToApp
@@ -40,6 +43,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.SemanticsProperties.ToggleableState
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
@@ -116,22 +121,35 @@ fun ScheduleView(
                 }
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+        Divider()
+        Spacer(modifier = Modifier.height(8.dp))
         val weekDays = arrayOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
         // Child Checkboxes
-        childCheckedStates.forEachIndexed { index, checked ->
+        childCheckedStates.forEachIndexed { index, _ ->
+            var checked by remember { mutableStateOf(false) }
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                modifier = Modifier
+                    .toggleable(
+                        value = checked,
+                        role = Role.Checkbox,
+                        onValueChange = {
+                            checked = !checked
+                            childCheckedStates[index] = checked
+                        }
+                    ).padding(8.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(weekDays[index])
+                Text(weekDays[index], modifier = Modifier.offset(x = 16.dp))
                 Checkbox(
+                    modifier = Modifier.clip(CircleShape).offset(x = (-8).dp),
                     checked = checked,
-                    onCheckedChange = { isChecked ->
-                        // Update the individual child state
-                        childCheckedStates[index] = isChecked
+                    onCheckedChange = {
+                        checked = !checked
+                        childCheckedStates[index] = checked
                     }
                 )
             }
