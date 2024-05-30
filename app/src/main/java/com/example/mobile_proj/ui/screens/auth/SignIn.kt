@@ -40,7 +40,7 @@ import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
 import io.realm.kotlin.mongodb.exceptions.ServiceException
 
 @Composable
-fun SignIn(navController: NavHostController, db: Connection) {
+fun SignIn(navController: NavHostController, db: Connection, intent: Intent) {
 
     Surface {
         var credentials by remember { mutableStateOf(CredentialsSignIn()) }
@@ -91,7 +91,7 @@ fun SignIn(navController: NavHostController, db: Connection) {
                 onChange = { data -> credentials = credentials.copy(pwd = data) },
                 submit = {
                     try {
-                        checkCredentials(credentials, context, db)
+                        checkCredentials(credentials, context, db, intent)
                     } catch (e: ServiceException) {
                         openAlertDialog.value = true
                     } catch (e: InvalidCredentialsException) {
@@ -112,7 +112,7 @@ fun SignIn(navController: NavHostController, db: Connection) {
             Button(
                 onClick = {
                     try {
-                        checkCredentials(credentials, context, db)
+                        checkCredentials(credentials, context, db, intent)
                     } catch (e: ServiceException) {
                         openAlertDialog.value = true
                     } catch (e: InvalidCredentialsException) {
@@ -148,9 +148,10 @@ data class CredentialsSignIn(
     }
 }
 
-private fun checkCredentials(creds: CredentialsSignIn, context: Context, db: Connection): Boolean {
+private fun checkCredentials(creds: CredentialsSignIn, context: Context, db: Connection, intent: Intent): Boolean {
+    intent.putExtra("reload", db.retrieveFromSharedPreference().first != creds.username)
     if (creds.isNotEmpty() && signInCheck(creds, db)) {
-        context.startActivity(Intent(context, MainActivity::class.java))
+        context.startActivity(intent)
         (context as Activity).finish()
         return true
     }

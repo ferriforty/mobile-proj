@@ -1,5 +1,6 @@
 package com.example.mobile_proj.ui.screens.favoriteWorkout
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.WorkoutState
 import com.example.mobile_proj.ui.WorkoutViewModel
@@ -36,7 +38,13 @@ import com.example.mobile_proj.ui.screens.home.WorkoutRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoriteScreen(workoutViewModel: WorkoutViewModel, state: WorkoutState, navController: NavHostController) {
+fun FavoriteScreen(
+    workoutViewModel: WorkoutViewModel,
+    state: WorkoutState, navController:
+    NavHostController,
+    db: Connection,
+    context: Context
+) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -51,7 +59,7 @@ fun FavoriteScreen(workoutViewModel: WorkoutViewModel, state: WorkoutState, navC
                     .padding(contentPadding)
             ) {
                 items(state.workout) { item ->
-                    WorkoutRow(workoutViewModel, item = item)
+                    WorkoutRow(workoutViewModel, item = item, db, context)
                 }
             }
         }else {

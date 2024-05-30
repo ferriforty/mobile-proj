@@ -1,6 +1,7 @@
 package com.example.mobile_proj.ui
 
 import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -26,7 +27,8 @@ sealed class RouteAuth(
 fun NavGraphAuth(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    db: Connection
+    db: Connection,
+    intent: Intent
 ) {
     NavHost(
         navController = navController,
@@ -35,12 +37,12 @@ fun NavGraphAuth(
     ) {
         with(RouteAuth.SignInRoute) {
             composable(route) {
-                SignIn(navController, db)
+                SignIn(navController, db, intent)
             }
         }
         with(RouteAuth.SignUpRoute) {
             composable(route) {
-                SignUp(navController, db)
+                SignUp(navController, db, intent)
             }
         }
     }

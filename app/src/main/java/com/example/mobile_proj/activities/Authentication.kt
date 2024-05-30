@@ -38,7 +38,7 @@ class Authentication : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val db = Connection(this)
-
+        val intent = Intent(this, MainActivity::class.java)
         setContent {
             val themeViewModel = koinViewModel<ThemeViewModel>()
             val themeState by themeViewModel.state.collectAsStateWithLifecycle()
@@ -59,7 +59,7 @@ class Authentication : ComponentActivity() {
                     val navController = rememberNavController()
 
                     Scaffold { contentPadding ->
-                        NavGraphAuth(navController, modifier = Modifier.padding(contentPadding), db)
+                        NavGraphAuth(navController, modifier = Modifier.padding(contentPadding), db, intent)
                     }
 
 
@@ -99,7 +99,8 @@ class Authentication : ComponentActivity() {
 
                         try {
                             if (signInCheckWithToken(autoLogCred.first, autoLogCred.second, db)) {
-                                this.startActivity(Intent(this, MainActivity::class.java))
+                                intent.putExtra("reload", false)
+                                this.startActivity(intent)
                                 (this as Activity).finish()
                             }
                         } catch (e: ServiceException) {
