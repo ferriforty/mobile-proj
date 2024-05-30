@@ -80,7 +80,7 @@ class NotificationReceiver : BroadcastReceiver() {
         val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val notificationBuilder = NotificationCompat.Builder(context, "my_channel_id")
             .setContentTitle(title)
-            .setSmallIcon(R.drawable.ic_dark_theme)
+            .setSmallIcon(R.drawable.ic_logo)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)

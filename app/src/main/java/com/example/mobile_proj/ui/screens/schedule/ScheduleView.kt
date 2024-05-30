@@ -102,33 +102,12 @@ fun ScheduleView(
     Column {
         TopAppBar(navController, Route.Schedule, null)
 
-        Spacer(modifier = Modifier.height(12.dp))
-        // Parent TriStateCheckbox
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Select all")
-            TriStateCheckbox(
-                state = parentState,
-                onClick = {
-                    // Determine new state based on current state
-                    val newState = parentState != androidx.compose.ui.state.ToggleableState.On
-                    childCheckedStates.forEachIndexed { index, _ ->
-                        childCheckedStates[index] = newState
-                    }
-                }
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Divider()
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         val weekDays = arrayOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
         // Child Checkboxes
-        childCheckedStates.forEachIndexed { index, _ ->
-            var checked by remember { mutableStateOf(false) }
+        childCheckedStates.forEachIndexed { index, defChecked ->
+            var checked by remember { mutableStateOf(defChecked) }
             Row(
                 modifier = Modifier
                     .toggleable(
