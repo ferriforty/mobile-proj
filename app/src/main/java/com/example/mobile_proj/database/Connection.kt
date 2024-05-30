@@ -20,7 +20,9 @@ import androidx.security.crypto.MasterKey
 import com.example.mobile_proj.data.database.Workout
 import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutState
 import com.google.gson.Gson
+import org.mongodb.kbson.BsonBoolean
 import org.mongodb.kbson.BsonDocument
+import org.mongodb.kbson.BsonString
 import org.mongodb.kbson.BsonUndefined
 
 
@@ -174,6 +176,28 @@ class Connection(context: Context) {
         res.put("same", retrieveFromSharedPreference().first == username)
         insertSharedPreference(username, res["access_token"].toString())
         return res
+    }
+
+    /**
+     * method to update password of a used
+     *
+     * @param username
+     * @param oldPassword
+     * @param password
+     *
+     * @return [res] true or false if the operation went well
+     */
+    fun updatePassword(
+        username: String,
+        oldPassword: String,
+        password: String,
+    ): Boolean {
+        val res = runBlocking {
+            return@runBlocking user
+                .functions
+                .call<BsonBoolean>("update_password", username, generateHash(oldPassword), generateHash(password))
+        }
+        return res.value
     }
 
     /**
