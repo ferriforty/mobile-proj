@@ -27,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mobile_proj.R
 import com.example.mobile_proj.ui.Route
+import com.example.mobile_proj.ui.composables.ProfileImageHolder
+import com.example.mobile_proj.ui.composables.Size
 import com.example.mobile_proj.ui.composables.TopAppBar
 import com.example.mobile_proj.ui.screens.profile.ProfileState
 import com.example.mobile_proj.utils.rememberCameraLauncher
@@ -54,6 +56,7 @@ fun EditProfileScreen(
             Toast.makeText(ctx, "Permission denied", Toast.LENGTH_SHORT).show()
         }
     }
+    pro
     fun takePicture() =
         if (cameraPermission.status.isGranted) {
             cameraLauncher.captureImage()
@@ -71,7 +74,7 @@ fun EditProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.padding(12.dp))
-
+            ProfileImageHolder(null, Size.Lg)
             IconButton(onClick = ::takePicture) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_photo_camera),
@@ -84,7 +87,16 @@ fun EditProfileScreen(
             OutlinedTextField(
                 value = state.username,
                 onValueChange = actions::setUsername,
-                label = { Text("Change username") },
+                label = { Text("Current password: ") },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp),
+            )
+            OutlinedTextField(
+                value = state.username,
+                onValueChange = actions::setUsername,
+                label = { Text("New password: ") },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()

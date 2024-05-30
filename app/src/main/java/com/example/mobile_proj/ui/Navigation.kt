@@ -22,6 +22,7 @@ import com.example.mobile_proj.database.AlertDialogConnection
 import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutScreen
 import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutViewModel
+import com.example.mobile_proj.ui.screens.editProfile.EditProfileScreen
 import com.example.mobile_proj.ui.screens.editProfile.EditProfileViewModel
 import com.example.mobile_proj.ui.screens.favoriteWorkout.FavoriteScreen
 import com.example.mobile_proj.ui.screens.home.HomeScreen
@@ -34,11 +35,8 @@ import com.example.mobile_proj.ui.screens.settings.ThemeState
 import com.example.mobile_proj.ui.screens.settings.ThemeViewModel
 import com.example.mobile_proj.ui.screens.workoutChatBot.ChatBotScreen
 import com.example.mobile_proj.ui.screens.workoutChatBot.WorkoutChatBotViewModel
-import com.google.gson.Gson
 import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
 import io.realm.kotlin.mongodb.exceptions.ServiceException
-import org.json.JSONObject
-
 import org.koin.androidx.compose.koinViewModel
 
 sealed class Route(
@@ -120,13 +118,13 @@ fun NavGraph(
         }
         with(Route.EditProfile) {
             composable(route) {
-                /*EditProfileScreen(
-                    profileState =,
+                EditProfileScreen(
+                    profileState = profileState,
                     state = state,
                     actions = editProfileVm.actions,
-                    onSubmit = { profileVm.setUsername(state.username) },
+                    onSubmit = { },
                     navController
-                )*/
+                )
             }
         }
         with(Route.ViewMap) {

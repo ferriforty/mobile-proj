@@ -1,10 +1,8 @@
 package com.example.mobile_proj.data.repositories
 
 import android.content.ContentResolver
-import android.net.Uri
 import com.example.mobile_proj.data.database.Profile
 import com.example.mobile_proj.data.database.ProfileDAO
-import com.example.mobile_proj.utils.saveImageToStorage
 import kotlinx.coroutines.flow.Flow
 
 class ProfileRepository(
@@ -13,7 +11,10 @@ class ProfileRepository(
 ) {
     val profile: Flow<List<Profile>> = profileDAO.getProfile()
     suspend fun getUsernames(): List<String> = profileDAO.getUsernameList()
-    suspend fun upsert(profile: Profile) {
+
+    suspend fun setUserImage(imageUri: String, username: String) = profileDAO.setUserImage(imageUri, username)
+
+    /*suspend fun upsert(profile: Profile) {
         if (profile.imageUri?.isNotEmpty() == true) {
             val imageUri = saveImageToStorage(
                 Uri.parse(profile.imageUri),
@@ -24,7 +25,5 @@ class ProfileRepository(
         } else {
             profileDAO.upsert(profile)
         }
-    }
-
-    suspend fun delete(profile: Profile) = profileDAO.delete(profile)
+    }*/
 }

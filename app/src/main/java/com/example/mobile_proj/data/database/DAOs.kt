@@ -14,10 +14,8 @@ interface ProfileDAO {
     @Query("SELECT username FROM profile")
     suspend fun getUsernameList(): List<String>
 
-    @Upsert
-    suspend fun upsert(profile: Profile)
-    @Delete
-    suspend fun delete(profile: Profile)
+    @Query("UPDATE profile SET imageUri = :imageUri WHERE username = :username")
+    suspend fun setUserImage(imageUri: String, username: String)
 }
 
 @Dao

@@ -13,7 +13,7 @@ data class Profile(
     val username: String,
 
     @ColumnInfo
-    val imageUri: String?
+    val imageUri: String
 )
 
 @Entity
