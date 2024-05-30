@@ -120,6 +120,7 @@ fun NavGraph(
         with(Route.EditProfile) {
             composable(route) {
                 EditProfileScreen(
+                    profileViewModel = profileVm,
                     profileState = profileState,
                     state = state,
                     actions = editProfileVm.actions,
@@ -136,7 +137,8 @@ fun NavGraph(
                             openAlertDialogCreds.value = true
                         }
                     },
-                    navController
+                    navController,
+                    db
                 )
             }
         }
