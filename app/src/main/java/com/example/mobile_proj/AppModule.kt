@@ -35,8 +35,7 @@ val appModule = module {
 
     single {
         ProfileRepository(
-            get<ProfileDatabase>().profileDAO(),
-            get<Context>().applicationContext.contentResolver
+            get<ProfileDatabase>().profileDAO()
         )
     }
 

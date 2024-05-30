@@ -29,15 +29,12 @@ import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.composables.TopAppBar
 import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutActions
-import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutState
-import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatBotScreen(
     navController: NavHostController,
     workoutChatBotViewModel: WorkoutChatBotViewModel,
-    state: AddWorkoutState,
     actions: AddWorkoutActions,
     onSubmit: () -> Unit,
     muscleGroup: String,
@@ -46,7 +43,7 @@ fun ChatBotScreen(
 ) {
     val ctx = LocalContext.current
     var stringOutput by remember { mutableStateOf("") }
-    var text by remember { mutableStateOf(exercise) }
+    val text by remember { mutableStateOf(exercise) }
 
     actions.setMuscleGroup(muscleGroup)
     actions.setExercise(exercise)
@@ -65,7 +62,8 @@ fun ChatBotScreen(
         OutlinedTextField(
             value = text,
             label = { Text(text = "Ask something") },
-            onValueChange = { text = it },
+            readOnly = true,
+            onValueChange = { },
         )
         Spacer(modifier = Modifier.padding(16.dp))
         Row(

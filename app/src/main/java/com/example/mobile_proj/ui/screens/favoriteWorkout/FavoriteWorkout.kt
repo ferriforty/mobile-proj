@@ -59,7 +59,9 @@ fun FavoriteScreen(
                     .padding(contentPadding)
             ) {
                 items(state.workout) { item ->
-                    WorkoutRow(workoutViewModel, item = item, db, context)
+                    WorkoutRow(workoutViewModel, item = item, db, context, onClick = {
+                        navController.navigate(Route.WorkoutDetails.buildWorkoutRoute(item.id.toString()))
+                    })
                 }
             }
         }else {

@@ -36,6 +36,7 @@ import com.example.mobile_proj.ui.screens.settings.ThemeState
 import com.example.mobile_proj.ui.screens.settings.ThemeViewModel
 import com.example.mobile_proj.ui.screens.workoutChatBot.ChatBotScreen
 import com.example.mobile_proj.ui.screens.workoutChatBot.WorkoutChatBotViewModel
+import com.example.mobile_proj.ui.screens.workoutDetails.WorkoutScreen
 import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
 import io.realm.kotlin.mongodb.exceptions.ServiceException
 import org.koin.androidx.compose.koinViewModel
@@ -61,6 +62,14 @@ sealed class Route(
         fun buildRoute(muscleGroup: String, exercise: String) = "chat-bot/$muscleGroup/$exercise"
     }
     data object FavoriteWorkout : Route("favorite-workout", "Your Favorite Workout")
+
+    data object WorkoutDetails : Route(
+        "workout/{workoutId}",
+        "Workout Details",
+        listOf(navArgument("workoutId") { type = NavType.StringType })
+    ) {
+        fun buildWorkoutRoute(workoutId: String) = "workout/$workoutId"
+    }
 
     companion object {
         val routes = setOf(Home, Profile, Settings, EditProfile, AddWorkout, ChatBot, FavoriteWorkout)
@@ -163,7 +172,6 @@ fun NavGraph(
                 ChatBotScreen(
                     navController = navController,
                     workoutChatBotViewModel = workoutChatBotViewModel,
-                    state = addWorkoutState,
                     actions = addWorkoutViewModel.actions,
                     onSubmit = {
                         try {
@@ -185,6 +193,14 @@ fun NavGraph(
             composable(route) {
                 val favoriteState by workoutViewModel.favoriteList.collectAsStateWithLifecycle()
                 FavoriteScreen(workoutViewModel, favoriteState, navController, db, context)
+            }
+        }
+        with(Route.WorkoutDetails) {
+            composable(route, arguments) { backStackEntry ->
+                val workout = requireNotNull(workoutState.workout.find {
+                    it.id == backStackEntry.arguments?.getString("workoutId")?.toInt()
+                })
+                WorkoutScreen(navController, workout)
             }
         }
     }

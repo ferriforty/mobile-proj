@@ -104,7 +104,9 @@ fun HomeScreen(
                     .padding(contentPadding)
             ) {
                 items(state.workout) { item ->
-                    WorkoutRow(workoutViewModel, item = item, db, context)
+                    WorkoutRow(workoutViewModel, item = item, db, context, onClick = {
+                        navController.navigate(Route.WorkoutDetails.buildWorkoutRoute(item.id.toString()))
+                    })
                 }
             }
         }else {
@@ -115,11 +117,13 @@ fun HomeScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WorkoutRow(workoutViewModel: WorkoutViewModel, item: Workout, db: Connection, context: Context) {
+fun WorkoutRow(workoutViewModel: WorkoutViewModel, item: Workout, db: Connection, context: Context, onClick: () -> Unit) {
     val openAlertDialog = remember { mutableStateOf(false) }
     val openAlertDialogCreds = remember { mutableStateOf(false) }
     Card(
+        onClick = onClick,
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         border = BorderStroke(2.dp, Color.White),
         modifier = Modifier

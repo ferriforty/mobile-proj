@@ -29,12 +29,13 @@ class WorkoutChatBotViewModel : ViewModel() {
 
         try {
             jsonObjectMessage.put("role", "user")
-            jsonObjectMessage.put("content", exercise)
+            jsonObjectMessage.put("content", "Help me with this exercise $exercise")
             jsonObjectMessageArray.put(0, jsonObjectMessage)
             jsonObject.put("messages", jsonObjectMessageArray)
         } catch (e: JSONException) {
             throw java.lang.RuntimeException(e)
         }
+        println(jsonObject)
         val jsonObjectRequest = object: JsonObjectRequest(
             Method.POST,
             stringURLEndPoint,
