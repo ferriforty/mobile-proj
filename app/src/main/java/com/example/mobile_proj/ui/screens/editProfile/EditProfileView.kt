@@ -56,7 +56,6 @@ fun EditProfileScreen(
             Toast.makeText(ctx, "Permission denied", Toast.LENGTH_SHORT).show()
         }
     }
-    pro
     fun takePicture() =
         if (cameraPermission.status.isGranted) {
             cameraLauncher.captureImage()

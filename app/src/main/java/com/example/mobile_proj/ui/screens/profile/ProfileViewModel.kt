@@ -26,8 +26,4 @@ class ProfileViewModel(
     fun addProfile(profile: Profile) = viewModelScope.launch {
         repository.upsert(profile)
     }
-
-    fun deletePlace(profile: Profile) = viewModelScope.launch {
-        repository.delete(profile)
-    }
 }

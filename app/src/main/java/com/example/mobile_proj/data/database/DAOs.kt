@@ -16,6 +16,9 @@ interface ProfileDAO {
 
     @Query("UPDATE profile SET imageUri = :imageUri WHERE username = :username")
     suspend fun setUserImage(imageUri: String, username: String)
+    @Upsert
+    suspend fun upsert(profile: Profile)
+
 }
 
 @Dao

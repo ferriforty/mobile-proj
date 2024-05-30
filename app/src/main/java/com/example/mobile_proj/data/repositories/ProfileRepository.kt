@@ -12,6 +12,7 @@ class ProfileRepository(
     val profile: Flow<List<Profile>> = profileDAO.getProfile()
     suspend fun getUsernames(): List<String> = profileDAO.getUsernameList()
 
+    suspend fun upsert(profile: Profile) = profileDAO.upsert(profile)
     suspend fun setUserImage(imageUri: String, username: String) = profileDAO.setUserImage(imageUri, username)
 
     /*suspend fun upsert(profile: Profile) {
