@@ -3,6 +3,7 @@ package com.example.mobile_proj.ui
 import android.content.Context
 import android.content.Intent
 import android.provider.Settings
+import android.widget.Toast
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Error
@@ -122,7 +123,19 @@ fun NavGraph(
                     profileState = profileState,
                     state = state,
                     actions = editProfileVm.actions,
-                    onSubmit = { },
+                    onSubmit = {
+                        try {
+                            if (!db.updatePassword(db.retrieveFromSharedPreference().first, state.oldPassword , state.password )) {
+                                Toast.makeText(context, "unable to change password", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(context, "password changed correctly", Toast.LENGTH_SHORT).show()
+                            }
+                        } catch (e: ServiceException) {
+                            openAlertDialog.value = true
+                        } catch (e: InvalidCredentialsException) {
+                            openAlertDialogCreds.value = true
+                        }
+                    },
                     navController
                 )
             }
