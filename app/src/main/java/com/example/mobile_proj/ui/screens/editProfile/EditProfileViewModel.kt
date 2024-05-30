@@ -9,7 +9,9 @@ import kotlinx.coroutines.flow.update
 
 data class EditProfileState(
     val username: String = "",
-    val imageUri: Uri =  Uri.EMPTY
+    val imageUri: Uri =  Uri.EMPTY,
+    val oldPassword: String = "",
+    val password: String = ""
 ) {
     fun toProfile() = Profile(
         username = username,
@@ -18,6 +20,8 @@ data class EditProfileState(
 }
 
 interface EditProfileActions {
+    fun setOldPassword(oldPassword: String)
+    fun setPassword(password: String)
     fun setUsername(username: String)
     fun setImageUri(imageUri: Uri)
 }
@@ -32,5 +36,11 @@ class EditProfileViewModel : ViewModel() {
 
         override fun setImageUri(imageUri: Uri) =
             _state.update { it.copy(imageUri = imageUri) }
+
+        override fun setOldPassword(oldPassword: String) =
+            _state.update { it.copy(oldPassword = oldPassword) }
+
+        override fun setPassword(password: String) =
+            _state.update { it.copy(password = password) }
     }
 }

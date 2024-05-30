@@ -8,9 +8,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SubdirectoryArrowRight
 import androidx.compose.material3.Button
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -20,10 +24,20 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
@@ -98,23 +112,70 @@ fun EditProfileScreen(
                 Text(text = "Save")
             }
             Divider(modifier = Modifier.padding(10.dp))
+
+            var isOldPasswordVisible by remember { mutableStateOf(false) }
+            var isPasswordVisible by remember { mutableStateOf(false) }
+
+            val leadingOldIcon = @Composable {
+                IconButton(onClick = { isOldPasswordVisible = !isOldPasswordVisible }) {
+                    Icon(
+                        if (isOldPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                        contentDescription = "",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            val leadingIcon = @Composable {
+                IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                    Icon(
+                        if (isPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                        contentDescription = "",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            val focusManager = LocalFocusManager.current
             OutlinedTextField(
-                value = state.username,
-                onValueChange = actions::setUsername,
+                value = state.oldPassword,
+                onValueChange = actions::setOldPassword,
                 label = { Text("Current password: ") },
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Password
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                ),
+                leadingIcon = leadingOldIcon,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(5.dp),
+                visualTransformation = if (isOldPasswordVisible) VisualTransformation.None else PasswordVisualTransformation()
             )
+
             OutlinedTextField(
-                value = state.username,
-                onValueChange = actions::setUsername,
+                value = state.password,
+                onValueChange = actions::setPassword,
                 label = { Text("New password: ") },
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Password
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        onSubmit()
+                        navController.navigateUp()
+                    }
+                ),
+                visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(5.dp),
+                leadingIcon = leadingIcon,
                 trailingIcon = @Composable {
                     IconButton(
                         onClick =  {
@@ -130,40 +191,6 @@ fun EditProfileScreen(
                 }
             )
             Divider(modifier = Modifier.padding(10.dp))
-
-            /*var isPasswordVisible by remember { mutableStateOf(false) }
-
-            val leadingIcon = @Composable {
-                Icon(
-                    Icons.Default.Key,
-                    contentDescription = "",
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
-            val trailingIcon = @Composable {
-                IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                    Icon(
-                        if (isPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                        contentDescription = "",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
-
-            OutlinedTextField(
-                value = value,
-                onValueChange = onChange,
-                leadingIcon = leadingIcon,
-                trailingIcon = trailingIcon,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Password
-                ),
-                placeholder = {  },
-                label = {  },
-                singleLine = true,
-                visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation()
-            )*/
         }
     }
 }
