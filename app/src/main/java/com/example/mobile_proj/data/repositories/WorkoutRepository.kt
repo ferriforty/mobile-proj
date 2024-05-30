@@ -12,6 +12,7 @@ class WorkoutRepository(
     val favoriteWorkout: Flow<List<Workout>> = workoutDAO.getFavoriteWorkoutList()
 
     suspend fun setFavorite(id: Int, favorite: Boolean) = workoutDAO.setFavorite(id, favorite)
+    suspend fun getWorkout() = workoutDAO.getWorkout()
     suspend fun upsert(workout: Workout) = workoutDAO.upsert(workout)
     suspend fun delete(workout: Workout) = workoutDAO.delete(workout)
 }

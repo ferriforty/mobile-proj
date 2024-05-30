@@ -20,15 +20,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
+import com.example.mobile_proj.data.database.Workout
 import com.example.mobile_proj.data.models.Theme
 import com.example.mobile_proj.database.AlertDialogConnection
 import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.NavGraph
 import com.example.mobile_proj.ui.WorkoutViewModel
+import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutViewModel
 import com.example.mobile_proj.ui.screens.settings.ThemeViewModel
 import com.example.mobile_proj.ui.theme.MobileprojTheme
 import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
 import io.realm.kotlin.mongodb.exceptions.ServiceException
+import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -44,6 +48,49 @@ class MainActivity : ComponentActivity() {
             val openAlertDialog = remember { mutableStateOf(false) }
             val openAlertDialogCreds = remember { mutableStateOf(false) }
 
+            val workoutViewModel = koinViewModel<WorkoutViewModel>()
+
+            var remoteWorkout: Array<Workout> = arrayOf()
+            try {
+                db.start()
+                remoteWorkout = db.retrieveWorkouts(db.retrieveFromSharedPreference().first)
+            } catch (e: ServiceException) {
+                openAlertDialog.value = true
+            } catch (e: InvalidCredentialsException) {
+                openAlertDialogCreds.value = true
+            }
+
+            val workout = runBlocking {
+                return@runBlocking workoutViewModel.getWorkout()
+            }
+
+            if (this.intent.getBooleanExtra("reload", true)) {
+                workout.forEach {
+                    workoutViewModel.deleteWorkout(it)
+                }
+                remoteWorkout.forEach {
+                    workoutViewModel.addWorkout(it)
+                }
+
+            } else {
+
+                val intersection = remoteWorkout
+                    .map { x -> x.idRemote }
+                    .intersect(workout.map { x -> x.idRemote }.toSet())
+
+                workout.forEach {
+                    if (!intersection.contains(it.idRemote)) {
+                        workoutViewModel.deleteWorkout(it)
+                    }
+                }
+                remoteWorkout.forEach {
+                    if (!intersection.contains(it.idRemote)) {
+                        workoutViewModel.addWorkout(it)
+                    }
+                }
+
+            }
+
             MobileprojTheme(darkTheme = when (themeState.theme) {
                 Theme.Light -> false
                 Theme.Dark -> true
@@ -54,20 +101,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
-                    try {
-                        db.start()
-                    } catch (e: ServiceException) {
-                        openAlertDialog.value = true
-                    } catch (e: InvalidCredentialsException) {
-                        openAlertDialogCreds.value = true
-                    }
-
-                    val workoutViewModel = koinViewModel<WorkoutViewModel>()
-                    val workoutState by workoutViewModel.state.collectAsStateWithLifecycle()
-
-                    db.retrieveWorkouts(db.retrieveFromSharedPreference().first).forEach { x -> println(x) }
-
                     when {
                         openAlertDialog.value -> {
                             AlertDialogConnection(

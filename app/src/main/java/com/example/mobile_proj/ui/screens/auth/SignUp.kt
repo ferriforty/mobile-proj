@@ -61,7 +61,7 @@ import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUp(navController: NavHostController, db: Connection) {
+fun SignUp(navController: NavHostController, db: Connection, intent: Intent) {
 
     val date = remember {
         Calendar.getInstance().apply {
@@ -143,7 +143,7 @@ fun SignUp(navController: NavHostController, db: Connection) {
                 onChange = { data -> credentials = credentials.copy(password = data) },
                 submit = {
                     try {
-                        if (!checkCredentials(credentials, context, db)) credentials = CredentialsSignUp()
+                        if (!checkCredentials(credentials, context, db, intent)) credentials = CredentialsSignUp()
                     } catch (e: ServiceException) {
                         openAlertDialog.value = true
                     } catch (e: InvalidCredentialsException) {
@@ -193,7 +193,7 @@ fun SignUp(navController: NavHostController, db: Connection) {
             Button(
                 onClick = {
                     try {
-                        if (!checkCredentials(credentials, context, db)) credentials = CredentialsSignUp()
+                        if (!checkCredentials(credentials, context, db, intent)) credentials = CredentialsSignUp()
                     } catch (e: ServiceException) {
                         openAlertDialog.value = true
                     } catch (e: InvalidCredentialsException) {
@@ -271,7 +271,7 @@ data class CredentialsSignUp(
     }
 }
 
-private fun checkCredentials(creds: CredentialsSignUp, context: Context, db: Connection): Boolean {
+private fun checkCredentials(creds: CredentialsSignUp, context: Context, db: Connection, intent: Intent): Boolean {
 
     if (!creds.isNotEmpty()) {
         Toast.makeText(context, "Wrong Credentials", Toast.LENGTH_SHORT).show()
@@ -287,8 +287,8 @@ private fun checkCredentials(creds: CredentialsSignUp, context: Context, db: Con
         Toast.makeText(context, "Unable to create User", Toast.LENGTH_SHORT).show()
         return false
     }
-
-    context.startActivity(Intent(context, MainActivity::class.java))
+    intent.putExtra("reload", true)
+    context.startActivity(intent)
     (context as Activity).finish()
     return true
 }

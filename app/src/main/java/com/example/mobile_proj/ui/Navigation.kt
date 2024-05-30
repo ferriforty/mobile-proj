@@ -1,8 +1,15 @@
 package com.example.mobile_proj.ui
 
 import android.content.Context
+import android.content.Intent
+import android.provider.Settings
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NamedNavArgument
@@ -11,6 +18,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.mobile_proj.database.AlertDialogConnection
 import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutScreen
 import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutViewModel
@@ -26,6 +34,11 @@ import com.example.mobile_proj.ui.screens.settings.ThemeState
 import com.example.mobile_proj.ui.screens.settings.ThemeViewModel
 import com.example.mobile_proj.ui.screens.workoutChatBot.ChatBotScreen
 import com.example.mobile_proj.ui.screens.workoutChatBot.WorkoutChatBotViewModel
+import com.google.gson.Gson
+import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
+import io.realm.kotlin.mongodb.exceptions.ServiceException
+import org.json.JSONObject
+
 import org.koin.androidx.compose.koinViewModel
 
 sealed class Route(
@@ -66,14 +79,20 @@ fun NavGraph(
 ) {
     val profileVm = koinViewModel<ProfileViewModel>()
 
+    val profileState by profileVm.profileState.collectAsStateWithLifecycle()
 
     val workoutViewModel = koinViewModel<WorkoutViewModel>()
     val workoutState by workoutViewModel.state.collectAsStateWithLifecycle()
     val workoutChatBotViewModel = koinViewModel<WorkoutChatBotViewModel>()
     val addWorkoutViewModel = koinViewModel<AddWorkoutViewModel>()
     val addWorkoutState by addWorkoutViewModel.state.collectAsStateWithLifecycle()
+
     val editProfileVm = koinViewModel<EditProfileViewModel>()
     val state by editProfileVm.state.collectAsStateWithLifecycle()
+
+    val openAlertDialog = remember { mutableStateOf(false) }
+    val openAlertDialogCreds = remember { mutableStateOf(false) }
+
     NavHost(
         navController = navController,
         startDestination = Route.Home.route,
@@ -81,7 +100,7 @@ fun NavGraph(
     ) {
         with(Route.Home) {
             composable(route) {
-                HomeScreen (workoutViewModel, workoutState, navController)
+                HomeScreen (workoutViewModel, workoutState, navController, db, context)
             }
         }
         with(Route.Profile) {
@@ -134,20 +153,48 @@ fun NavGraph(
                     state = addWorkoutState,
                     actions = addWorkoutViewModel.actions,
                     onSubmit = {
-                        val idRemote = db.insertWorkout(addWorkoutState.toWorkout())
-                        workoutViewModel.addWorkout(addWorkoutState.toWorkout().copy(idRemote = idRemote))
+                        try {
+                            val idRemote = db.insertWorkout(addWorkoutState.toWorkout())
+                            workoutViewModel.addWorkout(addWorkoutState.toWorkout().copy(idRemote = idRemote))
+                        } catch (e: ServiceException) {
+                            openAlertDialog.value = true
+                        } catch (e: InvalidCredentialsException) {
+                            openAlertDialogCreds.value = true
+                        }
                     },
                     muscleGroup = muscleGroup,
                     exercise = exercise,
-                    db
+                    db = db
                 )
             }
         }
         with(Route.FavoriteWorkout) {
             composable(route) {
                 val favoriteState by workoutViewModel.favoriteList.collectAsStateWithLifecycle()
-                FavoriteScreen(workoutViewModel, favoriteState, navController)
+                FavoriteScreen(workoutViewModel, favoriteState, navController, db, context)
             }
+        }
+    }
+    when {
+        openAlertDialog.value -> {
+            AlertDialogConnection(
+                onDismissRequest = { openAlertDialog.value = false },
+                onConfirmation = { openAlertDialog.value = false },
+                onDismissButton = { context.startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))},
+                dialogTitle = "Error in connecting to database",
+                dialogText = "Check your wi-fi connection",
+                icon = Icons.Default.Error
+            )
+        }
+        openAlertDialogCreds.value -> {
+            AlertDialogConnection(
+                onDismissRequest = {},
+                onConfirmation = {},
+                onDismissButton = {},
+                dialogTitle = "Wrong Credentials used to log in to server",
+                dialogText = "Report the bug and a patch will soon arrive",
+                icon = Icons.Default.BugReport
+            )
         }
     }
 }

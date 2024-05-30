@@ -21,6 +21,7 @@ import com.example.mobile_proj.data.database.Workout
 import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutState
 import com.google.gson.Gson
 import org.mongodb.kbson.BsonDocument
+import org.mongodb.kbson.BsonUndefined
 
 
 /**
@@ -123,9 +124,6 @@ class Connection(context: Context) {
      * function to reset username and access token from shared preference
      */
     fun deleteSharedPreference() {
-        sharedPreferences.edit()
-            .putString("username", "")
-            .apply()
 
         sharedPreferences.edit()
             .putString("access_token", "")
@@ -263,6 +261,21 @@ class Connection(context: Context) {
     }
 
     /**
+     * delete workout
+     *
+     * @param idRemote id of element to delete
+     */
+    fun deleteWorkout(
+        idRemote: String
+    ) {
+        runBlocking {
+            user
+                .functions
+                .call<BsonUndefined>("delete_workout", idRemote)
+        }
+    }
+
+    /**
      * retrieve workouts
      *
      * @param username Username owner workouts
@@ -295,7 +308,7 @@ class Connection(context: Context) {
                 exercise =  workoutJson["exercise"].toString(),
                 muscleGroup =  workoutJson["muscleGroup"].toString(),
                 favorite =  false,
-                idRemote = workoutJson["_id"].toString()
+                idRemote = JSONObject(workoutJson["_id"].toString())["\$oid"].toString()
             )
         }
 

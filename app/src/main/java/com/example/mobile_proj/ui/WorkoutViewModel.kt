@@ -28,10 +28,10 @@ class WorkoutViewModel(
     fun setFavorite(id: Int, favorite: Boolean) = viewModelScope.launch {
         repository.setFavorite(id, favorite)
     }
+    suspend fun getWorkout() = repository.getWorkout()
     fun addWorkout(workout: Workout) = viewModelScope.launch {
         repository.upsert(workout)
     }
-
     fun deleteWorkout(workout: Workout) = viewModelScope.launch {
         repository.delete(workout)
     }

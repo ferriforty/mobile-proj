@@ -1,5 +1,8 @@
 package com.example.mobile_proj.ui.screens.home
 
+import android.content.Context
+import android.content.Intent
+import android.provider.Settings
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +20,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.outlined.Add
@@ -49,15 +54,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mobile_proj.data.database.Workout
+import com.example.mobile_proj.database.AlertDialogConnection
+import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.WorkoutState
 import com.example.mobile_proj.ui.WorkoutViewModel
 import com.example.mobile_proj.ui.composables.BottomAppBar
 import com.example.mobile_proj.ui.composables.TopAppBar
+import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
+import io.realm.kotlin.mongodb.exceptions.ServiceException
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(workoutViewModel: WorkoutViewModel, state: WorkoutState, navController: NavHostController) {
+fun HomeScreen(
+    workoutViewModel: WorkoutViewModel,
+    state: WorkoutState,
+    navController: NavHostController,
+    db: Connection,
+    context: Context
+) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -89,7 +104,7 @@ fun HomeScreen(workoutViewModel: WorkoutViewModel, state: WorkoutState, navContr
                     .padding(contentPadding)
             ) {
                 items(state.workout) { item ->
-                    WorkoutRow(workoutViewModel, item = item)
+                    WorkoutRow(workoutViewModel, item = item, db, context)
                 }
             }
         }else {
@@ -101,7 +116,9 @@ fun HomeScreen(workoutViewModel: WorkoutViewModel, state: WorkoutState, navContr
 }
 
 @Composable
-fun WorkoutRow(workoutViewModel: WorkoutViewModel, item: Workout) {
+fun WorkoutRow(workoutViewModel: WorkoutViewModel, item: Workout, db: Connection, context: Context) {
+    val openAlertDialog = remember { mutableStateOf(false) }
+    val openAlertDialogCreds = remember { mutableStateOf(false) }
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         border = BorderStroke(2.dp, Color.White),
@@ -147,12 +164,43 @@ fun WorkoutRow(workoutViewModel: WorkoutViewModel, item: Workout) {
                         )
                     }
                     Button(colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                        onClick = { workoutViewModel.deleteWorkout(item) }
+                        onClick = {
+                            try {
+                                db.deleteWorkout(item.idRemote)
+                            } catch (e: ServiceException) {
+                                openAlertDialog.value = true
+                            } catch (e: InvalidCredentialsException) {
+                                openAlertDialogCreds.value = true
+                            }
+                            workoutViewModel.deleteWorkout(item)
+                        }
                     ) {
                         Icon(Icons.Outlined.Delete, "Delete Workout", tint = Color.White)
                     }
                 }
             }
+        }
+    }
+    when {
+        openAlertDialog.value -> {
+            AlertDialogConnection(
+                onDismissRequest = { openAlertDialog.value = false },
+                onConfirmation = { openAlertDialog.value = false },
+                onDismissButton = { context.startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))},
+                dialogTitle = "Error in connecting to database",
+                dialogText = "Check your wi-fi connection",
+                icon = Icons.Default.Error
+            )
+        }
+        openAlertDialogCreds.value -> {
+            AlertDialogConnection(
+                onDismissRequest = {},
+                onConfirmation = {},
+                onDismissButton = {},
+                dialogTitle = "Wrong Credentials used to log in to server",
+                dialogText = "Report the bug and a patch will soon arrive",
+                icon = Icons.Default.BugReport
+            )
         }
     }
 }
