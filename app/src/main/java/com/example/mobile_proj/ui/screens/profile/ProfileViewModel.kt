@@ -23,6 +23,8 @@ class ProfileViewModel(
 
     suspend fun getUsernameList() = repository.getUsernames()
 
+    suspend fun setUserImage(uri: String, username: String) = repository.setUserImage(uri, username)
+
     fun addProfile(profile: Profile) = viewModelScope.launch {
         repository.upsert(profile)
     }

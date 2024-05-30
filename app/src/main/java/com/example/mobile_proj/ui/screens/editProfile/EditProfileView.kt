@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SubdirectoryArrowRight
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,24 +25,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import com.example.mobile_proj.R
+import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.Route
 import com.example.mobile_proj.ui.composables.ProfileImageHolder
 import com.example.mobile_proj.ui.composables.Size
 import com.example.mobile_proj.ui.composables.TopAppBar
 import com.example.mobile_proj.ui.screens.profile.ProfileState
+import com.example.mobile_proj.ui.screens.profile.ProfileViewModel
 import com.example.mobile_proj.utils.rememberCameraLauncher
 import com.example.mobile_proj.utils.rememberPermission
+import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditProfileScreen(
+    profileViewModel: ProfileViewModel,
     profileState: ProfileState,
     state: EditProfileState,
     actions: EditProfileActions,
     onSubmit: () -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
+    db: Connection
 ) {
     val ctx = LocalContext.current
 
@@ -63,6 +70,8 @@ fun EditProfileScreen(
             cameraPermission.launchPermissionRequest()
         }
 
+    val currentUsername = db.retrieveFromSharedPreference().first
+    val currentProfile = profileState.profile.find { it.username == currentUsername }
     Scaffold (
         topBar = { TopAppBar(navController, Route.EditProfile, null) }
     ) { contentPadding ->
@@ -73,7 +82,7 @@ fun EditProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.padding(12.dp))
-            ProfileImageHolder(null, Size.Lg)
+            ProfileImageHolder(currentProfile?.imageUri?.toUri(), Size.Lg)
             IconButton(onClick = ::takePicture) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_photo_camera),
@@ -82,6 +91,12 @@ fun EditProfileScreen(
                 )
             }
             Text("Take a picture")
+            Button(onClick = {runBlocking {
+                profileViewModel.setUserImage(state.imageUri.toString(), currentUsername)
+            }
+            }) {
+                Text(text = "Save")
+            }
             Divider(modifier = Modifier.padding(10.dp))
             OutlinedTextField(
                 value = state.username,

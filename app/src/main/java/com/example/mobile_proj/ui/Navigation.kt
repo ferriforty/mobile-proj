@@ -119,11 +119,13 @@ fun NavGraph(
         with(Route.EditProfile) {
             composable(route) {
                 EditProfileScreen(
+                    profileViewModel = profileVm,
                     profileState = profileState,
                     state = state,
                     actions = editProfileVm.actions,
                     onSubmit = { },
-                    navController
+                    navController,
+                    db
                 )
             }
         }
