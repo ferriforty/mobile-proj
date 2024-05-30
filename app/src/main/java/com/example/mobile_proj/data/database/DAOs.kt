@@ -11,10 +11,9 @@ interface ProfileDAO {
     @Query("SELECT * FROM profile")
     fun getProfile(): Flow<List<Profile>>
 
-    @Query("UPDATE profile SET username = :username WHERE id = :id")
-    suspend fun setUsername(id: Int, username: String)
-    @Query("UPDATE profile SET imageUri = :imageUri WHERE id = :id")
-    suspend fun setImageUri(id: Int, imageUri: String)
+    @Query("SELECT username FROM profile")
+    suspend fun getUsernameList(): List<String>
+
     @Upsert
     suspend fun upsert(profile: Profile)
     @Delete

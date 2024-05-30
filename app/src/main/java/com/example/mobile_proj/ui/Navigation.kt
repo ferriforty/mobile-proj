@@ -14,7 +14,6 @@ import androidx.navigation.navArgument
 import com.example.mobile_proj.database.Connection
 import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutScreen
 import com.example.mobile_proj.ui.screens.addWorkout.AddWorkoutViewModel
-import com.example.mobile_proj.ui.screens.editProfile.EditProfileScreen
 import com.example.mobile_proj.ui.screens.editProfile.EditProfileViewModel
 import com.example.mobile_proj.ui.screens.favoriteWorkout.FavoriteScreen
 import com.example.mobile_proj.ui.screens.home.HomeScreen
@@ -27,8 +26,6 @@ import com.example.mobile_proj.ui.screens.settings.ThemeState
 import com.example.mobile_proj.ui.screens.settings.ThemeViewModel
 import com.example.mobile_proj.ui.screens.workoutChatBot.ChatBotScreen
 import com.example.mobile_proj.ui.screens.workoutChatBot.WorkoutChatBotViewModel
-import com.google.gson.Gson
-import org.json.JSONObject
 import org.koin.androidx.compose.koinViewModel
 
 sealed class Route(
@@ -68,12 +65,15 @@ fun NavGraph(
     context: Context
 ) {
     val profileVm = koinViewModel<ProfileViewModel>()
-    val profileState by profileVm.state.collectAsStateWithLifecycle()
+
+
     val workoutViewModel = koinViewModel<WorkoutViewModel>()
     val workoutState by workoutViewModel.state.collectAsStateWithLifecycle()
     val workoutChatBotViewModel = koinViewModel<WorkoutChatBotViewModel>()
     val addWorkoutViewModel = koinViewModel<AddWorkoutViewModel>()
     val addWorkoutState by addWorkoutViewModel.state.collectAsStateWithLifecycle()
+    val editProfileVm = koinViewModel<EditProfileViewModel>()
+    val state by editProfileVm.state.collectAsStateWithLifecycle()
     NavHost(
         navController = navController,
         startDestination = Route.Home.route,
@@ -86,7 +86,7 @@ fun NavGraph(
         }
         with(Route.Profile) {
             composable(route) {
-                ProfileScreen(profileState, navController, db)
+                ProfileScreen(navController, db, profileVm, state)
             }
         }
         with(Route.Settings) {
@@ -101,15 +101,13 @@ fun NavGraph(
         }
         with(Route.EditProfile) {
             composable(route) {
-                val editProfileVm = koinViewModel<EditProfileViewModel>()
-                val state by editProfileVm.state.collectAsStateWithLifecycle()
-                EditProfileScreen(
-                    profileState = profileState,
+                /*EditProfileScreen(
+                    profileState =,
                     state = state,
                     actions = editProfileVm.actions,
-                    onSubmit = { profileVm.setUsername(1, state.username) },
+                    onSubmit = { profileVm.setUsername(state.username) },
                     navController
-                )
+                )*/
             }
         }
         with(Route.ViewMap) {

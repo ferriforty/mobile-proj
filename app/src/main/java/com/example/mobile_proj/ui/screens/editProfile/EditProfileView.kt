@@ -1,10 +1,8 @@
 package com.example.mobile_proj.ui.screens.editProfile
 
 import android.Manifest
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,8 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mobile_proj.R
 import com.example.mobile_proj.ui.Route
-import com.example.mobile_proj.ui.composables.ProfileImageHolder
-import com.example.mobile_proj.ui.composables.Size
 import com.example.mobile_proj.ui.composables.TopAppBar
 import com.example.mobile_proj.ui.screens.profile.ProfileState
 import com.example.mobile_proj.utils.rememberCameraLauncher
@@ -75,15 +71,7 @@ fun EditProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.padding(12.dp))
-            Row {
-                if (profileState.profile.isNotEmpty()) {
-                    val imageUri = Uri.parse(profileState.profile[0].imageUri)
-                    actions.setImageUri(imageUri)
-                    ProfileImageHolder(imageUri, Size.Lg)
-                } else {
-                    ProfileImageHolder(null, Size.Lg)
-                }
-            }
+
             IconButton(onClick = ::takePicture) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_photo_camera),

@@ -9,24 +9,19 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-data class ProfileState(val profile: List<Profile>)
+data class ProfileState( val profile: List<Profile> )
 
 class ProfileViewModel(
-    private val repository: ProfileRepository
+    private val repository: ProfileRepository,
 ) : ViewModel() {
 
-    val state = repository.profile.map { ProfileState( profile = it) }.stateIn(
+    val profileState = repository.profile.map { ProfileState(profile = it) }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
         initialValue = ProfileState(emptyList())
     )
 
-    fun setUsername(id: Int, username: String) = viewModelScope.launch {
-        repository.setUsername(id, username)
-    }
-    fun setImageUri(id: Int, imageUri: String) = viewModelScope.launch {
-        repository.setImageUri(id, imageUri)
-    }
+    suspend fun getUsernameList() = repository.getUsernames()
 
     fun addProfile(profile: Profile) = viewModelScope.launch {
         repository.upsert(profile)
