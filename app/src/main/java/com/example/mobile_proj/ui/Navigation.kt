@@ -124,11 +124,6 @@ fun NavGraph(
                     profileState = profileState,
                     state = state,
                     actions = editProfileVm.actions,
-<<<<<<< HEAD
-                    onSubmit = { },
-                    navController,
-                    db
-=======
                     onSubmit = {
                         try {
                             if (!db.updatePassword(db.retrieveFromSharedPreference().first, state.oldPassword , state.password )) {
@@ -142,8 +137,8 @@ fun NavGraph(
                             openAlertDialogCreds.value = true
                         }
                     },
-                    navController
->>>>>>> a402e115951c1a5ba75fcc4d3d547b0f10b9fbb5
+                    navController,
+                    db
                 )
             }
         }
